@@ -1,11 +1,18 @@
-void run(){}
+//
+// Created by Taya on 9/7/2019.
+//
 
-void get_m(){}
+#ifndef UNTITLED_RUN_H
+#define UNTITLED_RUN_H
 
-void get_s(){}
+#include <stdio.h>
+#include <stdbool.h>
 
-void del_m(){}
+bool function(const char mainFName[25], const char indexTableFName[25], const char slaveFName[25]);
 
-void del_s(){}
+bool openFile(const char fName[25],  FILE *ptr);
 
-void collect_garbage(){}
+bool listen();
+
+
+#endif //UNTITLED_RUN_H
