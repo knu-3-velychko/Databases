@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 
 bool function(const char mainFName[25], const char indexTableFName[25], const char slaveFName[25]);
 

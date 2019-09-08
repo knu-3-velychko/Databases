@@ -34,17 +34,10 @@ bool openFile(const char fName[25], FILE *ptr) {
 
 bool listen() {
     char buffer[100];
-    char command[25];
     int i = 0;
     while (gets(buffer)) {
-        while (buffer[i] != '\n' && buffer[i] != '\0') {
-
-            i++;
-        }
+        char*  ptr=strtok(buffer," ");
         i = 0;
     }
 }
 
-char[25]* splitLex(){
-    
-}
