@@ -5,15 +5,21 @@
 #ifndef UNTITLED_RUN_H
 #define UNTITLED_RUN_H
 
+#include "insert.h"
+#include "get.h"
+#include "delete.h"
+#include "update.h"
+#include "count.h"
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
 
-bool function(const char mainFName[25], const char indexTableFName[25], const char slaveFName[25]);
 
-bool openFile(const char fName[25],  FILE *ptr);
+bool function(const char masterFName[25], const char indexTableFName[25], const char slaveFName[25]);
 
-bool listen();
+bool openFile(const char fName[25], FILE **ptr);
 
+bool listen(FILE **masterFile, FILE **indexFile, FILE **slaveFile);
 
 #endif //UNTITLED_RUN_H
