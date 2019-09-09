@@ -5,9 +5,9 @@ bool get_m(char *ptr, FILE **masterFile, FILE **indexFile) {
 
     if (ptr != NULL) {
         char *pEnd;
-        id = strtol(ptr, pEnd, 10);
+        id = strtol(ptr, &pEnd, 10);
         ptr = strtok(NULL, " ");
-        printf("%ld", id);
+        setbuf(stdout, 0);printf("%ld", id);
         if (ptr != NULL)
             return false;
     } else {
@@ -21,7 +21,7 @@ bool get_m(char *ptr, FILE **masterFile, FILE **indexFile) {
         fread(&index, sizeof(unsigned int), 1, *indexFile);
         fread(&status, sizeof(unsigned int), 1, *indexFile);
 
-        printf("%ld %i %i\n",tmpID,index,status);
+
         if (tmpID == id && status == 1) {
             struct Contributor contributor;
 //            unsigned long userID = 0;
@@ -34,10 +34,10 @@ bool get_m(char *ptr, FILE **masterFile, FILE **indexFile) {
             fread(contributor.password, sizeof(char), 10, *masterFile);
             fread(contributor.address, sizeof(char), 25, *masterFile);
 
-            printf("\nEnter Contributor name: %s", contributor.name);
-            printf("\nEnter Contributor e-mail: %s", contributor.eMail);
-            printf("\nEnter Contributor password: %s", contributor.password);
-            printf("\nEnter Contributor address: %s", contributor.address);
+            setbuf(stdout, 0);printf("\nEnter Contributor name: %s", contributor.name);
+            setbuf(stdout, 0);printf("\nEnter Contributor e-mail: %s", contributor.eMail);
+            setbuf(stdout, 0);printf("\nEnter Contributor password: %s", contributor.password);
+            setbuf(stdout, 0);printf("\nEnter Contributor address: %s", contributor.address);
 
             return true;
         }

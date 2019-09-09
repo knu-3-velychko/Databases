@@ -10,10 +10,10 @@ int main() {
 
     bool success = function(contributorFName, contributorIndexTable, imageFName);
     if (success) {
-        printf("Success!\n");
+        setbuf(stdout, 0);printf("Success!\n");
     }
     else{
-        printf("Error handled!\n");
+        setbuf(stdout, 0);printf("Error handled!\n");
     }
     return 0;
 }

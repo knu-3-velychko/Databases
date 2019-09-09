@@ -23,14 +23,14 @@ bool function(const char masterFName[25], const char indexTableFName[25], const 
 bool openFile(const char fName[25], FILE **ptr) {
     *ptr = fopen(fName, "r+");
     if (*ptr == NULL) {
-        printf("File %s does not exist!\n", fName);
-        printf("Creating new %s file...\n", fName);
+        setbuf(stdout, 0);printf("File %s does not exist!\n", fName);
+        setbuf(stdout, 0);printf("Creating new %s file...\n", fName);
         *ptr = fopen(fName, "w+");
         if (*ptr == NULL) {
-            printf("Creation failed.\n");
+            setbuf(stdout, 0);printf("Creation failed.\n");
             return false;
         }
-        printf("Creation successed.\n");
+        setbuf(stdout, 0);printf("Creation successed.\n");
     }
     return true;
 }
@@ -76,13 +76,13 @@ bool listen(FILE **masterFile, FILE **indexFile, FILE **slaveFile) {
 //            else
 //                return false;
 //        }
-//        else if (strcmp(ptr, "del-m") == 0) {
-//            ptr = strtok(NULL, " ");
-//            if (del_m(ptr))
-//                continue;
-//            else
-//                return false;
-//        }
+        else if (strcmp(ptr, "del-m") == 0) {
+            ptr = strtok(NULL, " ");
+            if (del_m(ptr, masterFile,indexFile))
+                continue;
+            else
+                return false;
+        }
 //        else if (strcmp(ptr, "del-s") == 0) {
 //            ptr = strtok(NULL, " ");
 //            if (del_s(ptr))
@@ -106,7 +106,7 @@ bool listen(FILE **masterFile, FILE **indexFile, FILE **slaveFile) {
 //        }
         else if (strcmp(ptr, "count-m") == 0) {
             ptr = strtok(NULL, " ");
-            printf("Number of cells in master file: %i", count_m(ptr, indexFile));
+            setbuf(stdout, 0);printf("Number of cells in master file: %i", count_m(ptr, indexFile));
             continue;
 
         }
@@ -125,7 +125,7 @@ bool listen(FILE **masterFile, FILE **indexFile, FILE **slaveFile) {
 //                return false;
 //        }
         else {
-            printf("Wrong command!");
+            setbuf(stdout, 0);printf("Wrong command!");
             continue;
         }
     }
@@ -168,7 +168,7 @@ void rewrite(const char masterFName[25], const char indexTableFName[25], const c
         fwrite(&array[j].id, sizeof(unsigned long), 1, newIndex);
         fwrite(&array[j].index, sizeof(unsigned int), 1, newIndex);
         fwrite(&s, sizeof(unsigned int), 1, newIndex);
-        printf("%ld %i %i\n", array[j].id, array[j].index, s);
+        setbuf(stdout, 0);printf("%ld %i %i\n", array[j].id, array[j].index, s);
     }
 
     fclose(*masterFile);

@@ -2,7 +2,7 @@
 
 unsigned int count_m(char *ptr, FILE **indexFile) {
     if (ptr != NULL) {
-        printf("Wrong command.");
+        setbuf(stdout, 0);printf("Wrong command.");
         return false;
     }
     unsigned long tmpID = 0;

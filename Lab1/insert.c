@@ -2,7 +2,7 @@
 
 bool insert_m(char *ptr, FILE **masterFile, FILE **indexTable) {
     if (ptr != NULL) {
-        printf("Wrong command.");
+        setbuf(stdout, 0);printf("Wrong command.");
         return false;
     }
     struct Contributor contributor;
@@ -11,20 +11,20 @@ bool insert_m(char *ptr, FILE **masterFile, FILE **indexTable) {
             size = 0;
     int cellsNumb = 0, status = 1;
 //    char name[25], eMail[25], password[25], address[25];
-    printf("\nEnter Contributor User ID:");
+    setbuf(stdout, 0);printf("\nEnter Contributor User ID:");
     scanf("%ld", &contributor.userID);
     if (!checkContributorID(contributor.userID, indexTable)) {
-        printf("ID exists. Try to enter another one");
+        setbuf(stdout, 0);printf("ID exists. Try to enter another one");
         return insert_m(ptr, masterFile, indexTable);
     } else {
 
-        printf("\nEnter Contributor name:");
+        setbuf(stdout, 0);printf("\nEnter Contributor name:");
         scanf("%s", contributor.name);
-        printf("\nEnter Contributor e-mail:");
+        setbuf(stdout, 0);printf("\nEnter Contributor e-mail:");
         scanf("%s", contributor.eMail);
-        printf("\nEnter Contributor password:");
+        setbuf(stdout, 0);printf("\nEnter Contributor password:");
         scanf("%s", contributor.password);
-        printf("\nEnter Contributor address:");
+        setbuf(stdout, 0);printf("\nEnter Contributor address:");
         scanf("%s", contributor.address);
 
         fseek(*indexTable, 0, SEEK_END);
