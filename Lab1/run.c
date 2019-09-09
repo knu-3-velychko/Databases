@@ -13,9 +13,8 @@ bool function(const char masterFName[25], const char indexTableFName[25], const 
     if (!listen(&masterFile, &indexTable, &slaveFile))
         return false;
 
-    fclose(masterFile);
-    fclose(indexTable);
-    fclose(slaveFile);
+    rewrite(masterFName, indexTableFName, slaveFName,
+            &masterFile, &indexTable, &slaveFile);
 
     return true;
 }
@@ -40,7 +39,9 @@ bool listen(FILE **masterFile, FILE **indexFile, FILE **slaveFile) {
     char buffer[100];
     while (gets(buffer)) {
         char *ptr = strtok(buffer, " ");
-        if (ptr == NULL || strcmp(ptr, "end") == 0)
+        if (ptr == NULL)
+            continue;
+        else if (strcmp(ptr, "end") == 0)
             break;
         else if (strcmp(ptr, "insert-m") == 0) {
             ptr = strtok(NULL, " ");
@@ -129,4 +130,68 @@ bool listen(FILE **masterFile, FILE **indexFile, FILE **slaveFile) {
         }
     }
     return true;
+}
+
+void rewrite(const char masterFName[25], const char indexTableFName[25], const char slaveFName[25],
+             FILE **masterFile, FILE **indexFile, FILE **slaveFile) {
+    FILE *newMaster = fopen("master.fl", "w+");
+    FILE *newIndex = fopen("master.ind", "w+");
+    struct Contributor contributor;
+    struct Cell array[100];
+    unsigned long tmpID = 0;
+    unsigned int index = 0, status = 0, s = 1, i = 0;
+    fseek(*masterFile, 0, SEEK_SET);
+    while (fread(&contributor.userID, sizeof(unsigned long), 1, *masterFile) == 1) {
+        fread(contributor.name, sizeof(char), 25, *masterFile);
+        fread(contributor.eMail, sizeof(char), 25, *masterFile);
+        fread(contributor.password, sizeof(char), 10, *masterFile);
+        fread(contributor.address, sizeof(char), 25, *masterFile);
+        fread(&status, sizeof(unsigned int), 1, *masterFile);
+        if (status == 1) {
+            struct Cell tmp = {contributor.userID, i};
+            array[i] = tmp;
+            i++;
+
+            fwrite(&contributor.userID, sizeof(unsigned long), 1, newMaster);
+            fwrite(contributor.name, sizeof(char), 25, newMaster);
+            fwrite(contributor.eMail, sizeof(char), 25, newMaster);
+            fwrite(contributor.password, sizeof(char), 10, newMaster);
+            fwrite(contributor.address, sizeof(char), 25, newMaster);
+            fwrite(&s, sizeof(unsigned int), 1, newMaster);
+        }
+    }
+
+    int size = sizeof(struct Cell);
+    qsort(array, i, sizeof(*array), comp);
+
+    for (unsigned int j = 0; j < i; j++) {
+        fwrite(&array[j].id, sizeof(unsigned long), 1, newIndex);
+        fwrite(&array[j].index, sizeof(unsigned int), 1, newIndex);
+        fwrite(&s, sizeof(unsigned int), 1, newIndex);
+        printf("%ld %i %i\n", array[j].id, array[j].index, s);
+    }
+
+    fclose(*masterFile);
+    fclose(*indexFile);
+    fclose(*slaveFile);
+
+    remove(masterFName);
+    remove(indexTableFName);
+
+
+    fclose(newMaster);
+    fclose(newIndex);
+    rename("master.fl", masterFName);
+    rename("master.ind", indexTableFName);
+
+}
+
+int comp(const void *elem1, const void *elem2) {
+    struct Cell f = *((struct Cell *) elem1);
+    if (elem2 == NULL)
+        return 1;
+    struct Cell s = *((struct Cell *) elem2);
+    if (f.id > s.id) return 1;
+    if (f.id < s.id) return -1;
+    return 0;
 }

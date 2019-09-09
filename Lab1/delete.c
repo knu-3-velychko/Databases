@@ -1,7 +1,8 @@
 #include "delete.h"
 
 bool del_m(char *ptr) {
-    return true;
+
+    return false;
 }
 
 bool del_s(char *ptr) {

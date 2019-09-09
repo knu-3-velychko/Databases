@@ -20,6 +20,8 @@ bool get_m(char *ptr, FILE **masterFile, FILE **indexFile) {
     while (fread(&tmpID, sizeof(unsigned long), 1, *indexFile) == 1) {
         fread(&index, sizeof(unsigned int), 1, *indexFile);
         fread(&status, sizeof(unsigned int), 1, *indexFile);
+
+        printf("%ld %i %i\n",tmpID,index,status);
         if (tmpID == id && status == 1) {
             struct Contributor contributor;
 //            unsigned long userID = 0;

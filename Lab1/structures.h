@@ -32,4 +32,9 @@ struct Image {
     unsigned int nextIndex;
 };
 
+struct Cell{
+    unsigned long id;
+    unsigned int index;
+};
+
 #endif //UNTITLED_STRUCTURES_H

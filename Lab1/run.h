@@ -16,10 +16,17 @@
 #include <string.h>
 
 
+
+
 bool function(const char masterFName[25], const char indexTableFName[25], const char slaveFName[25]);
 
 bool openFile(const char fName[25], FILE **ptr);
 
 bool listen(FILE **masterFile, FILE **indexFile, FILE **slaveFile);
+
+void rewrite(const char masterFName[25], const char indexTableFName[25], const char slaveFName[25],
+             FILE **masterFile, FILE **indexFile, FILE **slaveFile);
+
+int comp (const void * elem1, const void * elem2);
 
 #endif //UNTITLED_RUN_H
