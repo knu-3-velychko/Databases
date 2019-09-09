@@ -15,10 +15,10 @@ struct Date {
 
 struct Contributor {
     unsigned long userID;
-    char *name;
-    char *eMail;
-    char *password;
-    char *address;
+    char name[25];
+    char eMail[25];
+    char password[10];
+    char address[25];
 };
 
 struct Image {

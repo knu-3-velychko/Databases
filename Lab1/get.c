@@ -21,21 +21,21 @@ bool get_m(char *ptr, FILE **masterFile, FILE **indexFile) {
         fread(&index, sizeof(unsigned int), 1, *indexFile);
         fread(&status, sizeof(unsigned int), 1, *indexFile);
         if (tmpID == id && status == 1) {
-            unsigned long userID = 0, size = 0;
-            int cellsNumb = 0, status = 1;
-            char name[25], eMail[25], password[10], address[25];
+            struct Contributor contributor;
+//            unsigned long userID = 0;
+//            char name[25], eMail[25], password[10], address[25];
             fseek(*masterFile, index * (sizeof(unsigned long) + sizeof(char) * (25 * 3 + 10) + sizeof(unsigned int)),
                   SEEK_SET);
-            fread(&userID, sizeof(unsigned long), 1, *masterFile);
-            fread(name, sizeof(char), 25, *masterFile);
-            fread(eMail, sizeof(char), 25, *masterFile);
-            fread(password, sizeof(char), 10, *masterFile);
-            fread(address, sizeof(char), 25, *masterFile);
+            fread(&contributor.userID, sizeof(unsigned long), 1, *masterFile);
+            fread(contributor.name, sizeof(char), 25, *masterFile);
+            fread(contributor.eMail, sizeof(char), 25, *masterFile);
+            fread(contributor.password, sizeof(char), 10, *masterFile);
+            fread(contributor.address, sizeof(char), 25, *masterFile);
 
-            printf("\nEnter Contributor name: %s", name);
-            printf("\nEnter Contributor e-mail: %s", eMail);
-            printf("\nEnter Contributor password: %s", password);
-            printf("\nEnter Contributor address: %s", address);
+            printf("\nEnter Contributor name: %s", contributor.name);
+            printf("\nEnter Contributor e-mail: %s", contributor.eMail);
+            printf("\nEnter Contributor password: %s", contributor.password);
+            printf("\nEnter Contributor address: %s", contributor.address);
 
             return true;
         }

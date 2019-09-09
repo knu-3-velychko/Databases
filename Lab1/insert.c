@@ -5,30 +5,27 @@ bool insert_m(char *ptr, FILE **masterFile, FILE **indexTable) {
         printf("Wrong command.");
         return false;
     }
-    unsigned long userID = 0, size = 0;
+    struct Contributor contributor;
+    unsigned long
+//            userID = 0,
+            size = 0;
     int cellsNumb = 0, status = 1;
-    char name[25], eMail[25], password[25], address[25];
+//    char name[25], eMail[25], password[25], address[25];
     printf("\nEnter Contributor User ID:");
-    scanf("%ld", &userID);
-    if (!checkContributorID(userID, indexTable)) {
+    scanf("%ld", &contributor.userID);
+    if (!checkContributorID(contributor.userID, indexTable)) {
         printf("ID exists. Try to enter another one");
         return insert_m(ptr, masterFile, indexTable);
     } else {
-        printf("\nEnter Contributor name:");
-        scanf("%s", name);
-        printf("\nEnter Contributor e-mail:");
-        scanf("%s", eMail);
-        printf("\nEnter Contributor password:");
-        scanf("%s", password);
-        printf("\nEnter Contributor address:");
-        scanf("%s", address);
 
-        struct Contributor contributor = {
-                .userID=userID,
-                .name=name,
-                .eMail=eMail,
-                .password=password,
-                .address=address};
+        printf("\nEnter Contributor name:");
+        scanf("%s", contributor.name);
+        printf("\nEnter Contributor e-mail:");
+        scanf("%s", contributor.eMail);
+        printf("\nEnter Contributor password:");
+        scanf("%s", contributor.password);
+        printf("\nEnter Contributor address:");
+        scanf("%s", contributor.address);
 
         fseek(*indexTable, 0, SEEK_END);
         fseek(*masterFile, 0, SEEK_END);
@@ -36,17 +33,17 @@ bool insert_m(char *ptr, FILE **masterFile, FILE **indexTable) {
         size = ftell(*indexTable);
         cellsNumb = size / (sizeof(unsigned int) + sizeof(unsigned long));
 
-        fwrite(&userID, sizeof(unsigned long), 1, *indexTable);
+        fwrite(&contributor.userID, sizeof(unsigned long), 1, *indexTable);
         fwrite(&cellsNumb, sizeof(unsigned int), 1, *indexTable);
         fwrite(&status, sizeof(unsigned int), 1, *indexTable);
 
-        fwrite(&userID, sizeof(unsigned long), 1, *masterFile);
-        fwrite(name, sizeof(char), 25, *masterFile);
-        fwrite(eMail, sizeof(char), 25, *masterFile);
-        fwrite(password, sizeof(char), 10, *masterFile);
-        fwrite(address, sizeof(char), 25, *masterFile);
+        fwrite(&contributor.userID, sizeof(unsigned long), 1, *masterFile);
+        fwrite(contributor.name, sizeof(char), 25, *masterFile);
+        fwrite(contributor.eMail, sizeof(char), 25, *masterFile);
+        fwrite(contributor.password, sizeof(char), 10, *masterFile);
+        fwrite(contributor.address, sizeof(char), 25, *masterFile);
         fwrite(&status, sizeof(unsigned int), 1, *masterFile);
-
+        return true;
     }
     return true;
 }
