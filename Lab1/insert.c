@@ -1,5 +1,7 @@
 #include "insert.h"
 
+int IMAGE_NUMBER = -1;
+
 bool insert_m(char *ptr, FILE **masterFile, FILE **indexTable) {
     if (ptr != NULL) {
         setbuf(stdout, 0);
@@ -11,7 +13,6 @@ bool insert_m(char *ptr, FILE **masterFile, FILE **indexTable) {
     unsigned long size = 0, id = 0;
     int cellsNumb = 0, status = 1;
     char userID[21];
-    char *pEnd;
 
     setbuf(stdout, 0);
     printf("\nEnter Contributor User ID:");
@@ -43,27 +44,33 @@ bool insert_m(char *ptr, FILE **masterFile, FILE **indexTable) {
 }
 
 bool insert_s(char *ptr, FILE **masterFile, FILE **indexTable, FILE **slaveFile) {
-    long id;
+    unsigned long contributorID = 0;
     char *tmp = ptr;
 
     if (ptr != NULL) {
         char *pEnd;
-        id = strtol(ptr, &pEnd, 10);
+        contributorID = strtol(ptr, &pEnd, 10);
         ptr = strtok(NULL, " ");
         setbuf(stdout, 0);
-        printf("%ld", id);
+        printf("%ld", contributorID);
         if (ptr != NULL)
             return false;
     } else {
         return false;
     }
 
-    if (getContributorID(id, indexTable) != -1) {
+    int index = 0, imageIndex = -1;
+    if ((index = getContributorID(contributorID, indexTable)) == -1) {
         setbuf(stdout, 0);
-        printf("ID exists. Try to enter another one");
+        printf("ID not exists. Try to enter another one");
         return insert_s(tmp, masterFile, indexTable, slaveFile);
     } else {
-
+        imageIndex = getImageIndex(index, masterFile);
+        if (imageIndex != -1) {
+            int lastImage = getLastImage(imageIndex, slaveFile);
+            fseek(*slaveFile, 0, SEEK_SET);
+            fseek(*slaveFile, lastImage * IMAGE_SIZE, SEEK_SET);
+        }
         return true;
     }
 }
@@ -78,5 +85,18 @@ int getContributorID(unsigned long id, FILE **f) {
         if (tmpID == id && status == 1)
             return index;
     }
+    return -1;
+}
+
+int getImageIndex(int index, FILE **masterFile) {
+    int imageIndex = -1;
+    fseek(*masterFile, 0, SEEK_SET);
+    fseek(*masterFile, CONTRIBUTOR_SIZE * (index + 1), SEEK_SET);
+    fseek(*masterFile, -sizeof(int) * 2, SEEK_SET);
+    fread(&imageIndex, sizeof(int), 1, *masterFile);
+    return imageIndex;
+}
+
+int getLastImage(int index, FILE **slaveFile) {
     return -1;
 }
