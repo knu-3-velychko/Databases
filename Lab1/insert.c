@@ -2,33 +2,34 @@
 
 bool insert_m(char *ptr, FILE **masterFile, FILE **indexTable) {
     if (ptr != NULL) {
-        setbuf(stdout, 0);printf("Wrong command.");
+        setbuf(stdout, 0);
+        printf("Wrong command.");
         return false;
     }
+
     struct Contributor contributor;
-    unsigned long
-//            userID = 0,
-            size = 0;
+    unsigned long size = 0, id = 0;
     int cellsNumb = 0, status = 1;
-//    char name[25], eMail[25], password[25], address[25];
-    setbuf(stdout, 0);printf("\nEnter Contributor User ID:");
-    scanf("%ld", &contributor.userID);
-    if (!checkContributorID(contributor.userID, indexTable)) {
-        setbuf(stdout, 0);printf("ID exists. Try to enter another one");
+    char userID[21];
+    char *pEnd;
+
+    setbuf(stdout, 0);
+    printf("\nEnter Contributor User ID:");
+    scanf("%s", userID);
+    id = strtol(userID, NULL, 10);
+
+    if (getContributorID(contributor.userID, indexTable) != -1) {
+        setbuf(stdout, 0);
+        printf("ID exists. Try to enter another one");
         return insert_m(ptr, masterFile, indexTable);
     } else {
-
-        setbuf(stdout, 0);printf("\nEnter Contributor name:");
-        scanf("%s", contributor.name);
-        setbuf(stdout, 0);printf("\nEnter Contributor e-mail:");
-        scanf("%s", contributor.eMail);
-        setbuf(stdout, 0);printf("\nEnter Contributor password:");
-        scanf("%s", contributor.password);
-        setbuf(stdout, 0);printf("\nEnter Contributor address:");
-        scanf("%s", contributor.address);
+        contributor = readContributor();
+        contributor.userID = id;
 
         fseek(*indexTable, 0, SEEK_END);
         fseek(*masterFile, 0, SEEK_END);
+
+        writeContributor(&contributor, masterFile);
 
         size = ftell(*indexTable);
         cellsNumb = size / (sizeof(unsigned int) + sizeof(unsigned long));
@@ -37,22 +38,37 @@ bool insert_m(char *ptr, FILE **masterFile, FILE **indexTable) {
         fwrite(&cellsNumb, sizeof(unsigned int), 1, *indexTable);
         fwrite(&status, sizeof(unsigned int), 1, *indexTable);
 
-        fwrite(&contributor.userID, sizeof(unsigned long), 1, *masterFile);
-        fwrite(contributor.name, sizeof(char), 25, *masterFile);
-        fwrite(contributor.eMail, sizeof(char), 25, *masterFile);
-        fwrite(contributor.password, sizeof(char), 10, *masterFile);
-        fwrite(contributor.address, sizeof(char), 25, *masterFile);
-        fwrite(&status, sizeof(unsigned int), 1, *masterFile);
         return true;
     }
-    return true;
 }
 
-bool insert_s(char *ptr, FILE **f) {
-    return true;
+bool insert_s(char *ptr, FILE **masterFile, FILE **indexTable, FILE **slaveFile) {
+    long id;
+    char *tmp = ptr;
+
+    if (ptr != NULL) {
+        char *pEnd;
+        id = strtol(ptr, &pEnd, 10);
+        ptr = strtok(NULL, " ");
+        setbuf(stdout, 0);
+        printf("%ld", id);
+        if (ptr != NULL)
+            return false;
+    } else {
+        return false;
+    }
+
+    if (getContributorID(id, indexTable) != -1) {
+        setbuf(stdout, 0);
+        printf("ID exists. Try to enter another one");
+        return insert_s(tmp, masterFile, indexTable, slaveFile);
+    } else {
+
+        return true;
+    }
 }
 
-bool checkContributorID(unsigned long id, FILE **f) {
+int getContributorID(unsigned long id, FILE **f) {
     unsigned long tmpID = 0;
     unsigned int index = 0, status = 0;
     fseek(*f, 0, SEEK_SET);
@@ -60,7 +76,7 @@ bool checkContributorID(unsigned long id, FILE **f) {
         fread(&index, sizeof(unsigned int), 1, *f);
         fread(&status, sizeof(unsigned int), 1, *f);
         if (tmpID == id && status == 1)
-            return false;
+            return index;
     }
-    return true;
+    return -1;
 }

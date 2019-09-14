@@ -7,7 +7,8 @@ bool get_m(char *ptr, FILE **masterFile, FILE **indexFile) {
         char *pEnd;
         id = strtol(ptr, &pEnd, 10);
         ptr = strtok(NULL, " ");
-        setbuf(stdout, 0);printf("%ld", id);
+        setbuf(stdout, 0);
+        printf("%ld", id);
         if (ptr != NULL)
             return false;
     } else {
@@ -34,10 +35,14 @@ bool get_m(char *ptr, FILE **masterFile, FILE **indexFile) {
             fread(contributor.password, sizeof(char), 10, *masterFile);
             fread(contributor.address, sizeof(char), 25, *masterFile);
 
-            setbuf(stdout, 0);printf("\nEnter Contributor name: %s", contributor.name);
-            setbuf(stdout, 0);printf("\nEnter Contributor e-mail: %s", contributor.eMail);
-            setbuf(stdout, 0);printf("\nEnter Contributor password: %s", contributor.password);
-            setbuf(stdout, 0);printf("\nEnter Contributor address: %s", contributor.address);
+            setbuf(stdout, 0);
+            printf("\nContributor name: %s", contributor.name);
+            setbuf(stdout, 0);
+            printf("\nContributor e-mail: %s", contributor.eMail);
+            setbuf(stdout, 0);
+            printf("\nContributor password: %s", contributor.password);
+            setbuf(stdout, 0);
+            printf("\nContributor address: %s", contributor.address);
 
             return true;
         }

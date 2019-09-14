@@ -19,7 +19,10 @@ struct Contributor {
     char eMail[25];
     char password[10];
     char address[25];
+    int firstImage;
 };
+
+struct Contributor DefaultContributor();
 
 struct Image {
     unsigned long imageID;
@@ -32,7 +35,7 @@ struct Image {
     unsigned int nextIndex;
 };
 
-struct Cell{
+struct Cell {
     unsigned long id;
     unsigned int index;
 };

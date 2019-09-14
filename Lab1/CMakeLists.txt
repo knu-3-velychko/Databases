@@ -4,8 +4,9 @@ project(untitled)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(untitled main.c
-        structures.h
+        structures.h structures.c
         run.h run.c
+        io.h io.c
         insert.h insert.c
         delete.h delete.c
         get.h get.c

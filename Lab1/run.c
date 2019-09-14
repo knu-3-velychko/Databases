@@ -23,14 +23,18 @@ bool function(const char masterFName[25], const char indexTableFName[25], const 
 bool openFile(const char fName[25], FILE **ptr) {
     *ptr = fopen(fName, "r+");
     if (*ptr == NULL) {
-        setbuf(stdout, 0);printf("File %s does not exist!\n", fName);
-        setbuf(stdout, 0);printf("Creating new %s file...\n", fName);
+        setbuf(stdout, 0);
+        printf("File %s does not exist!\n", fName);
+        setbuf(stdout, 0);
+        printf("Creating new %s file...\n", fName);
         *ptr = fopen(fName, "w+");
         if (*ptr == NULL) {
-            setbuf(stdout, 0);printf("Creation failed.\n");
+            setbuf(stdout, 0);
+            printf("Creation failed.\n");
             return false;
         }
-        setbuf(stdout, 0);printf("Creation successed.\n");
+        setbuf(stdout, 0);
+        printf("Creation successed.\n");
     }
     return true;
 }
@@ -51,7 +55,7 @@ bool listen(FILE **masterFile, FILE **indexFile, FILE **slaveFile) {
                 return false;
         } else if (strcmp(ptr, "insert-s") == 0) {
             ptr = strtok(NULL, " ");
-            if (insert_s(ptr, slaveFile))
+            if (insert_s(ptr, masterFile, indexFile, slaveFile))
                 continue;
             else
                 return false;
@@ -78,7 +82,7 @@ bool listen(FILE **masterFile, FILE **indexFile, FILE **slaveFile) {
 //        }
         else if (strcmp(ptr, "del-m") == 0) {
             ptr = strtok(NULL, " ");
-            if (del_m(ptr, masterFile,indexFile))
+            if (del_m(ptr, masterFile, indexFile))
                 continue;
             else
                 return false;
@@ -106,7 +110,8 @@ bool listen(FILE **masterFile, FILE **indexFile, FILE **slaveFile) {
 //        }
         else if (strcmp(ptr, "count-m") == 0) {
             ptr = strtok(NULL, " ");
-            setbuf(stdout, 0);printf("Number of cells in master file: %i", count_m(ptr, indexFile));
+            setbuf(stdout, 0);
+            printf("Number of cells in master file: %i", count_m(ptr, indexFile));
             continue;
 
         }
@@ -125,7 +130,8 @@ bool listen(FILE **masterFile, FILE **indexFile, FILE **slaveFile) {
 //                return false;
 //        }
         else {
-            setbuf(stdout, 0);printf("Wrong command!");
+            setbuf(stdout, 0);
+            printf("Wrong command!");
             continue;
         }
     }
@@ -134,12 +140,12 @@ bool listen(FILE **masterFile, FILE **indexFile, FILE **slaveFile) {
 
 void rewrite(const char masterFName[25], const char indexTableFName[25], const char slaveFName[25],
              FILE **masterFile, FILE **indexFile, FILE **slaveFile) {
+
     FILE *newMaster = fopen("master.fl", "w+");
     FILE *newIndex = fopen("master.ind", "w+");
     struct Contributor contributor;
     struct Cell array[100];
-    unsigned long tmpID = 0;
-    unsigned int index = 0, status = 0, s = 1, i = 0;
+    unsigned int status = 0, s = 1, i = 0;
     fseek(*masterFile, 0, SEEK_SET);
     while (fread(&contributor.userID, sizeof(unsigned long), 1, *masterFile) == 1) {
         fread(contributor.name, sizeof(char), 25, *masterFile);
@@ -151,26 +157,19 @@ void rewrite(const char masterFName[25], const char indexTableFName[25], const c
             struct Cell tmp = {contributor.userID, i};
             array[i] = tmp;
             i++;
-
-            fwrite(&contributor.userID, sizeof(unsigned long), 1, newMaster);
-            fwrite(contributor.name, sizeof(char), 25, newMaster);
-            fwrite(contributor.eMail, sizeof(char), 25, newMaster);
-            fwrite(contributor.password, sizeof(char), 10, newMaster);
-            fwrite(contributor.address, sizeof(char), 25, newMaster);
-            fwrite(&s, sizeof(unsigned int), 1, newMaster);
+            writeContributor(&contributor, &newMaster);
         }
     }
 
-    int size = sizeof(struct Cell);
     qsort(array, i, sizeof(*array), comp);
 
     for (unsigned int j = 0; j < i; j++) {
         fwrite(&array[j].id, sizeof(unsigned long), 1, newIndex);
         fwrite(&array[j].index, sizeof(unsigned int), 1, newIndex);
         fwrite(&s, sizeof(unsigned int), 1, newIndex);
-        setbuf(stdout, 0);printf("%ld %i %i\n", array[j].id, array[j].index, s);
+        setbuf(stdout, 0);
+        printf("%ld %i %i\n", array[j].id, array[j].index, s);
     }
-
     fclose(*masterFile);
     fclose(*indexFile);
     fclose(*slaveFile);
@@ -178,12 +177,10 @@ void rewrite(const char masterFName[25], const char indexTableFName[25], const c
     remove(masterFName);
     remove(indexTableFName);
 
-
     fclose(newMaster);
     fclose(newIndex);
     rename("master.fl", masterFName);
     rename("master.ind", indexTableFName);
-
 }
 
 int comp(const void *elem1, const void *elem2) {
