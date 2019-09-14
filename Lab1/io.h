@@ -5,9 +5,11 @@
 
 struct Contributor readContributor();
 
-void writeContributor(const struct Contributor *contributor, FILE **masterFile);
-
 struct Date readDate();
 
-int readTimeUnit(const char *text, const int left, const int right);
+unsigned int readTimeUnit(const char *text, const int left, const int right);
 
+
+void writeContributor(const struct Contributor *contributor, FILE **masterFile);
+
+void writeDate(const struct Date *date, FILE **slaveFile);

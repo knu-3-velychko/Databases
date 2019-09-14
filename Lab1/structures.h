@@ -6,12 +6,14 @@
 #define UNTITLED_STRUCTURES_H
 
 struct Date {
-    int year;
-    int month;
-    int day;
-    int hour;
-    int minute;
+    unsigned int year;
+    unsigned int month;
+    unsigned int day;
+    unsigned int hour;
+    unsigned int minute;
 };
+
+struct Date DefaultDate();
 
 struct Contributor {
     unsigned long userID;
@@ -26,14 +28,17 @@ struct Contributor DefaultContributor();
 
 struct Image {
     unsigned long imageID;
+    unsigned long contributorID;
     char imageType[15];
     float width;
     float height;
     float earnings;
     char status[25];
     struct Date date;
-    unsigned int nextIndex;
+    int nextIndex;
 };
+
+struct Image DefaultImage();
 
 struct Cell {
     unsigned long id;

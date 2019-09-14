@@ -17,19 +17,8 @@ struct Contributor readContributor() {
     return contributor;
 }
 
-void writeContributor(const struct Contributor *contributor, FILE **masterFile) {
-    int status = 1;
-    fwrite(&contributor->userID, sizeof(unsigned long), 1, *masterFile);
-    fwrite(contributor->name, sizeof(char), 25, *masterFile);
-    fwrite(contributor->eMail, sizeof(char), 25, *masterFile);
-    fwrite(contributor->password, sizeof(char), 10, *masterFile);
-    fwrite(contributor->address, sizeof(char), 25, *masterFile);
-    fwrite(&contributor->firstImage, sizeof(unsigned int), 1, *masterFile);
-    fwrite(&status, sizeof(unsigned int), 1, *masterFile);
-}
-
 struct Image readImage() {
-    struct Image image;
+    struct Image image = DefaultImage();
     char width[25], height[25], earnings[25];
     setbuf(stdout, 0);
     printf("\nEnter Image type:");
@@ -49,16 +38,15 @@ struct Image readImage() {
     setbuf(stdout, 0);
     printf("\nEnter Image status:");
     scanf("%s", image.status);
-
-
+    image.date = readDate();
     return image;
 }
 
 struct Date readDate() {
-    struct Date date;
+    struct Date date = DefaultDate();
     date.year = readTimeUnit("Enter Year: ", 1920, 2019);
     date.month = readTimeUnit("Enter Month: ", 1, 12);
-    int days = 31;
+    unsigned int days = 31;
     if (date.month == 2) {
         if (date.year % 4 == 0) {
             days = 29;
@@ -80,9 +68,9 @@ struct Date readDate() {
     return date;
 }
 
-int readTimeUnit(const char *text, const int left, const int right) {
+unsigned int readTimeUnit(const char *text, const int left, const int right) {
     char unitStr[5];
-    int unit = 0;
+    unsigned int unit = 0;
     bool valid = false;
     while (!valid) {
         setbuf(stdout, 0);
@@ -93,4 +81,35 @@ int readTimeUnit(const char *text, const int left, const int right) {
             valid = true;
     }
     return unit;
+}
+
+void writeContributor(const struct Contributor *contributor, FILE **masterFile) {
+    int status = 1;
+    fwrite(&contributor->userID, sizeof(unsigned long), 1, *masterFile);
+    fwrite(contributor->name, sizeof(char), 25, *masterFile);
+    fwrite(contributor->eMail, sizeof(char), 25, *masterFile);
+    fwrite(contributor->password, sizeof(char), 10, *masterFile);
+    fwrite(contributor->address, sizeof(char), 25, *masterFile);
+    fwrite(&contributor->firstImage, sizeof(unsigned int), 1, *masterFile);
+    fwrite(&status, sizeof(unsigned int), 1, *masterFile);
+}
+
+void writeImage(const struct Image *image, FILE **slaveFile) {
+    int status = 1;
+    fwrite(&image->imageID, sizeof(unsigned long), 1, *slaveFile);
+    fwrite(&image->contributorID, sizeof(unsigned long), 1, *slaveFile);
+    fwrite(image->imageType, sizeof(char), 15, *slaveFile);
+    fwrite(&image->width, sizeof(float), 1, *slaveFile);
+    fwrite(&image->height, sizeof(float), 1, *slaveFile);
+    fwrite(&image->earnings, sizeof(float), 1, *slaveFile);
+    writeDate(&image->date, slaveFile);
+    fwrite(&image->nextIndex, sizeof(int), 1, *slaveFile);
+}
+
+void writeDate(const struct Date *date, FILE **slaveFile) {
+    fwrite(&date->year, sizeof(unsigned int), 1, *slaveFile);
+    fwrite(&date->month, sizeof(unsigned int), 1, *slaveFile);
+    fwrite(&date->day, sizeof(unsigned int), 1, *slaveFile);
+    fwrite(&date->hour, sizeof(unsigned int), 1, *slaveFile);
+    fwrite(&date->minute, sizeof(unsigned int), 1, *slaveFile);
 }
