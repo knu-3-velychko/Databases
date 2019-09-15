@@ -1,5 +1,5 @@
 #include "update.h"
-
+/*
 bool update_m(char *ptr, FILE **indexFile, FILE **masterFile) {
     long id;
 
@@ -40,3 +40,4 @@ bool update_m(char *ptr, FILE **indexFile, FILE **masterFile) {
 bool update_s(char *ptr) {
     return true;
 }
+ */

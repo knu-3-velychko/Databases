@@ -2,10 +2,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
-struct Contributor readContributor();
+struct Contributor *readContributor();
 
-struct Date readDate();
+struct Date *readDate();
 
 unsigned int readTimeUnit(const char *text, const int left, const int right);
 

@@ -1,5 +1,6 @@
 #include "io.h"
 #include "count.h"
+#include "indexTable.h"
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
@@ -7,11 +8,11 @@
 
 int IMAGE_NUMBER;
 
-bool insert_m(char *ptr, FILE **masterFile, FILE **indexFile);
+bool insert_m(char *ptr, FILE **masterFile);
 
-bool insert_s(char *ptr, FILE **masterFile, FILE **indexTable, FILE **slaveFile);
+bool insert_s(char *ptr, FILE **masterFile, FILE **slaveFile);
 
-int getContributorID(const unsigned long id, FILE **indexTable);
+int getContributorID(const unsigned long id, FILE **masterFile);
 
 int getImageID(const unsigned long id, FILE **slaveFile);
 

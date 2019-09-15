@@ -15,6 +15,8 @@ void writeTable(FILE **indexFile, const char indexTableFName[25]);
 
 void deleteTable();
 
+int searchTable(unsigned long id);
+
 void sortTable();
 
 void add(unsigned long id, unsigned int index);

@@ -38,6 +38,29 @@ void deleteTable() {
     TABLE_SIZE = 0;
 }
 
+int searchTable(unsigned long id) {
+    if (TABLE_SIZE == 0)
+        return -1;
+    sortTable();
+    unsigned int first = 0, last = TABLE_SIZE, mid;
+    bool flag = false;
+    while (first <= last) {
+        mid = (first + last) / 2;
+        if (id == indexTable[mid]->id) {
+            flag = true;
+            break;
+        } else {
+            if (id > indexTable[mid]->id)
+                first = mid + 1;
+            else
+                last = mid - 1;
+        }
+    }
+    if (flag)
+        return indexTable[mid]->index;
+    return -1;
+}
+
 void sortTable() {
     if (!sorted) {
         qsort(indexTable, TABLE_SIZE, sizeof(*indexTable), comp);

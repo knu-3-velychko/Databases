@@ -13,7 +13,6 @@ struct Date {
     unsigned int minute;
 };
 
-struct Date DefaultDate();
 
 const unsigned long DATE_SIZE;
 
@@ -27,7 +26,6 @@ struct Contributor {
     int firstImage;
 };
 
-struct Contributor DefaultContributor();
 
 const unsigned long CONTRIBUTOR_SIZE;
 
@@ -39,11 +37,10 @@ struct Image {
     float height;
     float earnings;
     char status[25];
-    struct Date date;
+    struct Date* date;
     int nextIndex;
 };
 
-struct Image DefaultImage();
 
 const unsigned long IMAGE_SIZE;
 

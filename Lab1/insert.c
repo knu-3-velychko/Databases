@@ -2,46 +2,51 @@
 
 int IMAGE_NUMBER = -1;
 
-bool insert_m(char *ptr, FILE **masterFile, FILE **indexTable) {
+bool insert_m(char *ptr, FILE **masterFile) {
     if (ptr != NULL) {
         setbuf(stdout, 0);
         printf("Wrong command.");
         return false;
     }
 
-    struct Contributor contributor;
-    unsigned long size = 0, id = 0;
-    int cellsNumb = 0, status = 1;
     char userID[21];
-
+    unsigned long id = 0;
     setbuf(stdout, 0);
     printf("\nEnter Contributor User ID:");
     scanf("%s", userID);
     id = strtol(userID, NULL, 10);
 
-    if (getContributorID(contributor.userID, indexTable) != -1) {
+    if (getContributorID(id, masterFile) != -1) {
         setbuf(stdout, 0);
         printf("ID exists. Try to enter another one");
-        return insert_m(ptr, masterFile, indexTable);
+        return insert_m(ptr, masterFile);
     } else {
-        contributor = readContributor();
-        contributor.userID = id;
+        struct Contributor *contributor = readContributor();
+        contributor->userID = id;
 
-        fseek(*indexTable, 0, SEEK_END);
         fseek(*masterFile, 0, SEEK_END);
-
-        writeContributor(&contributor, masterFile);
-
-        size = ftell(*indexTable);
-        cellsNumb = size / (sizeof(unsigned int) + sizeof(unsigned long));
-
-        fwrite(&contributor.userID, sizeof(unsigned long), 1, *indexTable);
-        fwrite(&cellsNumb, sizeof(unsigned int), 1, *indexTable);
-        fwrite(&status, sizeof(unsigned int), 1, *indexTable);
-
+        long index = ftell(*masterFile) / (sizeof(struct Contributor) + sizeof(int));
+        writeContributor(contributor, masterFile);
+        add(id, index);
         return true;
     }
+
 }
+
+int getContributorID(const unsigned long id, FILE **masterFile) {
+    unsigned int status = 0;
+    int index = searchTable(id);
+    printf("%i",index);
+    if (index != -1) {
+        fseek(*masterFile, (index + 1) * sizeof(struct Contributor), SEEK_SET);
+        fread(&status, sizeof(unsigned int), 1, *masterFile);
+        if (status == 1)
+            return index;
+    }
+    return -1;
+}
+
+/*
 
 bool insert_s(char *ptr, FILE **masterFile, FILE **indexTable, FILE **slaveFile) {
     unsigned long contributorID = 0;
@@ -77,19 +82,6 @@ bool insert_s(char *ptr, FILE **masterFile, FILE **indexTable, FILE **slaveFile)
     }
 }
 
-int getContributorID(const unsigned long id, FILE **f) {
-    unsigned long tmpID = 0;
-    unsigned int index = 0, status = 0;
-    fseek(*f, 0, SEEK_SET);
-    while (fread(&tmpID, sizeof(unsigned long), 1, *f) == 1) {
-        fread(&index, sizeof(unsigned int), 1, *f);
-        fread(&status, sizeof(unsigned int), 1, *f);
-        if (tmpID == id && status == 1)
-            return index;
-    }
-    return -1;
-}
-
 int getImageID(const unsigned long id, FILE **slaveFile) {
     unsigned long tmpID = 0;
     unsigned int index = 0;
@@ -110,3 +102,5 @@ void setImageIndex(const int contributorIndex, const int imageIndex, FILE **mast
     fseek(*masterFile, -sizeof(int) * 2, SEEK_SET);
     fwrite(&imageIndex, sizeof(int), 1, SEEK_SET);
 }
+ */
+

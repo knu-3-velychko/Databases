@@ -1,69 +1,71 @@
 #include "io.h"
 
-struct Contributor readContributor() {
-    struct Contributor contributor = DefaultContributor();
+struct Contributor *readContributor() {
+    struct Contributor *contributor = malloc(sizeof(struct Contributor));
+    char name[25];
     setbuf(stdout, 0);
     printf("\nEnter Contributor name:");
-    scanf("%s", contributor.name);
+    scanf("%s", name);
+    strcpy(contributor->name, name);
     setbuf(stdout, 0);
     printf("\nEnter Contributor e-mail:");
-    scanf("%s", contributor.eMail);
+    scanf("%s", contributor->eMail);
     setbuf(stdout, 0);
     printf("\nEnter Contributor password:");
-    scanf("%s", contributor.password);
+    scanf("%s", contributor->password);
     setbuf(stdout, 0);
     printf("\nEnter Contributor address:");
-    scanf("%s", contributor.address);
+    scanf("%s", contributor->address);
     return contributor;
 }
 
-struct Image readImage() {
-    struct Image image = DefaultImage();
+struct Image *readImage() {
+    struct Image *image = malloc(sizeof(struct Image));
     char width[25], height[25], earnings[25];
     setbuf(stdout, 0);
     printf("\nEnter Image type:");
-    scanf("%s", image.imageType);
+    scanf("%s", image->imageType);
     setbuf(stdout, 0);
     printf("\nEnter Image width:");
     scanf("%s", width);
-    image.width = strtof(width, NULL);
+    image->width = strtof(width, NULL);
     setbuf(stdout, 0);
     printf("\nEnter Image height:");
     scanf("%s", height);
-    image.height = strtof(height, NULL);
+    image->height = strtof(height, NULL);
     setbuf(stdout, 0);
     printf("\nEnter earning for Image:");
     scanf("%s", earnings);
-    image.earnings = strtof(earnings, NULL);
+    image->earnings = strtof(earnings, NULL);
     setbuf(stdout, 0);
     printf("\nEnter Image status:");
-    scanf("%s", image.status);
-    image.date = readDate();
+    scanf("%s", image->status);
+    image->date = readDate();
     return image;
 }
 
-struct Date readDate() {
-    struct Date date = DefaultDate();
-    date.year = readTimeUnit("Enter Year: ", 1920, 2019);
-    date.month = readTimeUnit("Enter Month: ", 1, 12);
+struct Date *readDate() {
+    struct Date *date = malloc(sizeof(struct Date));
+    date->year = readTimeUnit("Enter Year: ", 1920, 2019);
+    date->month = readTimeUnit("Enter Month: ", 1, 12);
     unsigned int days = 31;
-    if (date.month == 2) {
-        if (date.year % 4 == 0) {
+    if (date->month == 2) {
+        if (date->year % 4 == 0) {
             days = 29;
         } else {
             days = 28;
         }
-    } else if (date.month == 4 || date.month == 6 || date.month == 9 || date.month == 11) {
+    } else if (date->month == 4 || date->month == 6 || date->month == 9 || date->month == 11) {
         days = 30;
     } else {
         days = 31;
     }
-    date.day = readTimeUnit("Enter Day: ", 1, days);
-    date.hour = readTimeUnit("Enter Hour: ", 0, 24);
-    if (date.hour == 24) {
-        date.minute = readTimeUnit("Enter Minute: ", 0, 0);
+    date->day = readTimeUnit("Enter Day: ", 1, days);
+    date->hour = readTimeUnit("Enter Hour: ", 0, 24);
+    if (date->hour == 24) {
+        date->minute = readTimeUnit("Enter Minute: ", 0, 0);
     } else {
-        date.minute = readTimeUnit("Enter Minute: ", 0, 60);
+        date->minute = readTimeUnit("Enter Minute: ", 0, 60);
     }
     return date;
 }
@@ -85,25 +87,15 @@ unsigned int readTimeUnit(const char *text, const int left, const int right) {
 
 void writeContributor(const struct Contributor *contributor, FILE **masterFile) {
     int status = 1;
-    fwrite(&contributor->userID, sizeof(unsigned long), 1, *masterFile);
-    fwrite(contributor->name, sizeof(char), 25, *masterFile);
-    fwrite(contributor->eMail, sizeof(char), 25, *masterFile);
-    fwrite(contributor->password, sizeof(char), 10, *masterFile);
-    fwrite(contributor->address, sizeof(char), 25, *masterFile);
-    fwrite(&contributor->firstImage, sizeof(unsigned int), 1, *masterFile);
+    fwrite(contributor, sizeof(struct Contributor), 1, *masterFile);
     fwrite(&status, sizeof(unsigned int), 1, *masterFile);
+    printf("%ld", ftell(*masterFile));
 }
 
 void writeImage(const struct Image *image, FILE **slaveFile) {
     int status = 1;
-    fwrite(&image->imageID, sizeof(unsigned long), 1, *slaveFile);
-    fwrite(&image->contributorID, sizeof(unsigned long), 1, *slaveFile);
-    fwrite(image->imageType, sizeof(char), 15, *slaveFile);
-    fwrite(&image->width, sizeof(float), 1, *slaveFile);
-    fwrite(&image->height, sizeof(float), 1, *slaveFile);
-    fwrite(&image->earnings, sizeof(float), 1, *slaveFile);
-    writeDate(&image->date, slaveFile);
-    fwrite(&image->nextIndex, sizeof(int), 1, *slaveFile);
+    fwrite(image, sizeof(struct Image), 1, *slaveFile);
+    fwrite(&status, sizeof(unsigned int), 1, *slaveFile);
 }
 
 void writeDate(const struct Date *date, FILE **slaveFile) {
