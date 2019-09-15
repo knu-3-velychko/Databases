@@ -1,11 +1,12 @@
 #include "structures.h"
+#include "io.h"
 
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
 
-bool get_m(char *ptr, FILE **masterFile, FILE **indexFile);
+bool get_m(char *ptr, FILE **masterFile);
 
 bool get_s(char *ptr);
 

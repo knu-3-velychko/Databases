@@ -63,13 +63,13 @@ bool listen(FILE **masterFile, FILE **indexFile, FILE **slaveFile) {
             else
                 return false;
         }
-//        else if (strcmp(ptr, "get-m") == 0) {
-//            ptr = strtok(NULL, " ");
-//            if (get_m(ptr, masterFile, indexFile))
-//                continue;
-//            else
-//                return false;
-//        }
+        else if (strcmp(ptr, "get-m") == 0) {
+            ptr = strtok(NULL, " ");
+            if (get_m(ptr, masterFile))
+                continue;
+            else
+                return false;
+        }
 //        else if (strcmp(ptr, "get-s") == 0) {
 //            ptr = strtok(NULL, " ");
 //            if (get_s(ptr))

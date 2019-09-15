@@ -106,14 +106,39 @@ void writeDate(const struct Date *date, FILE **slaveFile) {
     fwrite(&date->minute, sizeof(unsigned int), 1, *slaveFile);
 }
 
+void printContributor(const struct Contributor *contributor) {
+    setbuf(stdout, 0);
+    printf("\nEnter Contributor ID: %ld", contributor->userID);
+    setbuf(stdout, 0);
+    printf("\nEnter Contributor name: %s", contributor->name);
+    setbuf(stdout, 0);
+    printf("\nEnter Contributor e-mail: %s", contributor->eMail);
+    setbuf(stdout, 0);
+    printf("\nEnter Contributor password: %s", contributor->password);
+    setbuf(stdout, 0);
+    printf("\nEnter Contributor address: %s", contributor->address);
+}
+
+int getContributorIndex(const unsigned long id, FILE **masterFile) {
+    unsigned int status = 0;
+    int index = searchTable(id);
+    printf("%i", index);
+    if (index != -1) {
+        fseek(*masterFile, (index + 1) * sizeof(struct Contributor), SEEK_SET);
+        fread(&status, sizeof(unsigned int), 1, *masterFile);
+        if (status == 1)
+            return index;
+    }
+    return -1;
+}
+
 int getImageID(const unsigned long id, FILE **slaveFile) {
     int i = 0;
     struct Image *image = malloc(sizeof(struct Image));
     fseek(*slaveFile, 0, SEEK_SET);
     while (fread(image, sizeof(struct Image), 1, *slaveFile)) {
-        if (image->imageID == id) {
+        if (image->imageID == id)
             return i;
-        }
         i++;
     }
     return -1;

@@ -18,6 +18,8 @@ void writeImage(const struct Image *image, FILE **slaveFile);
 
 void writeDate(const struct Date *date, FILE **slaveFile);
 
+void printContributor(const struct Contributor *contributor);
+
 int getContributorIndex(const unsigned long id, FILE **masterFile);
 
 int getImageID(const unsigned long id, FILE **slaveFile);

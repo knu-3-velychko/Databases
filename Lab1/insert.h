@@ -11,5 +11,3 @@ int IMAGE_NUMBER;
 bool insert_m(char *ptr, FILE **masterFile);
 
 bool insert_s(char *ptr, FILE **masterFile, FILE **slaveFile);
-
-int getLastImage(const int index, FILE **slaveFile);
