@@ -56,14 +56,14 @@ bool listen(FILE **masterFile, FILE **indexFile, FILE **slaveFile) {
                 continue;
             else
                 return false;
+        } else if (strcmp(ptr, "insert-s") == 0) {
+            ptr = strtok(NULL, " ");
+            if (insert_s(ptr, masterFile, slaveFile))
+                continue;
+            else
+                return false;
         }
-//        else if (strcmp(ptr, "insert-s") == 0) {
-//            ptr = strtok(NULL, " ");
-//            if (insert_s(ptr, masterFile, indexFile, slaveFile))
-//                continue;
-//            else
-//                return false;
-//        } else if (strcmp(ptr, "get-m") == 0) {
+//        else if (strcmp(ptr, "get-m") == 0) {
 //            ptr = strtok(NULL, " ");
 //            if (get_m(ptr, masterFile, indexFile))
 //                continue;

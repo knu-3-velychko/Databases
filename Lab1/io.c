@@ -105,3 +105,28 @@ void writeDate(const struct Date *date, FILE **slaveFile) {
     fwrite(&date->hour, sizeof(unsigned int), 1, *slaveFile);
     fwrite(&date->minute, sizeof(unsigned int), 1, *slaveFile);
 }
+
+int getImageID(const unsigned long id, FILE **slaveFile) {
+    int i = 0;
+    struct Image *image = malloc(sizeof(struct Image));
+    fseek(*slaveFile, 0, SEEK_SET);
+    while (fread(image, sizeof(struct Image), 1, *slaveFile)) {
+        if (image->imageID == id) {
+            return i;
+        }
+        i++;
+    }
+    return -1;
+}
+
+void setImageIndex(const unsigned long contributorIndex, const unsigned long imageIndex, FILE **masterFile) {
+    fseek(*masterFile, sizeof(struct Contributor) * (contributorIndex + 1) - sizeof(int), SEEK_SET);
+    fwrite(&imageIndex, sizeof(int), 1, *masterFile);
+}
+
+int getImageIndex(const int index, FILE **masterFile) {
+    struct Contributor *contributor = malloc(sizeof(struct Contributor));
+    fseek(*masterFile, sizeof(struct Contributor) * index, SEEK_SET);
+    fread(contributor, sizeof(struct Contributor), 1, *masterFile);
+    return contributor->firstImage;
+}

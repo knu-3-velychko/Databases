@@ -1,5 +1,5 @@
 #include "get.h"
-
+/*
 bool get_m(char *ptr, FILE **masterFile, FILE **indexFile) {
     long id;
 
@@ -56,4 +56,4 @@ bool get_s(char *ptr) {
 
 bool get_i(char *ptr) {
     return true;
-}
+}*/

@@ -31,14 +31,13 @@ unsigned int count_s(char *ptr, FILE **slaveFile) {
         return false;
     }
 
-    unsigned long id = 0;
+    struct Image *image = malloc(sizeof(struct Image));
+
     unsigned int status = 0, i = 0;
     fseek(*slaveFile, 0, SEEK_SET);
-    while ((fread(&id, sizeof(long int), 1, *slaveFile)) == 1) {
-        fread(&id, sizeof(long int), 1, *slaveFile);
-        fseek(*slaveFile, sizeof(struct Image) - sizeof(long int), SEEK_CUR);
+    while (fread(image, sizeof(struct Image), 1, *slaveFile)) {
         fread(&status, sizeof(int), 1, *slaveFile);
-        if (status == 1 && id == contributorID)
+        if (status == 1 && image->contributorID == contributorID)
             i++;
     }
     return i;
@@ -50,10 +49,10 @@ unsigned int count_all(char *ptr, FILE **slaveFile) {
         printf("Wrong command.");
         return false;
     }
+    struct Image *image = malloc(sizeof(struct Image));
     unsigned int status = 0, i = 0;
     fseek(*slaveFile, 0, SEEK_SET);
-    while (!feof(*slaveFile)) {
-        fseek(*slaveFile, sizeof(struct Image), SEEK_CUR);
+    while (fread(image, sizeof(struct Image), 1, *slaveFile)) {
         fread(&status, sizeof(int), 1, *slaveFile);
         if (status == 1)
             i++;
