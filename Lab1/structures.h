@@ -15,7 +15,7 @@ struct Date {
 
 struct Date DefaultDate();
 
-const long DATE_SIZE;
+const unsigned long DATE_SIZE;
 
 
 struct Contributor {
@@ -29,7 +29,7 @@ struct Contributor {
 
 struct Contributor DefaultContributor();
 
-const long CONTRIBUTOR_SIZE;
+const unsigned long CONTRIBUTOR_SIZE;
 
 struct Image {
     unsigned long imageID;
@@ -45,7 +45,7 @@ struct Image {
 
 struct Image DefaultImage();
 
-const long IMAGE_SIZE;
+const unsigned long IMAGE_SIZE;
 
 struct Cell {
     unsigned long id;

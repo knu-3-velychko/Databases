@@ -6,6 +6,7 @@
 #define UNTITLED_RUN_H
 
 #include "io.h"
+#include "indexTable.h"
 #include "insert.h"
 #include "get.h"
 #include "delete.h"

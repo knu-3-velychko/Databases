@@ -10,6 +10,9 @@ bool function(const char masterFName[25], const char indexTableFName[25], const 
     if (!openFile(slaveFName, &slaveFile))
         return false;
 
+    initializeTable();
+    readTable(&indexTable);
+
     if (!listen(&masterFile, &indexTable, &slaveFile))
         return false;
 
@@ -47,25 +50,25 @@ bool listen(FILE **masterFile, FILE **indexFile, FILE **slaveFile) {
             continue;
         else if (strcmp(ptr, "end") == 0)
             break;
-        else if (strcmp(ptr, "insert-m") == 0) {
-            ptr = strtok(NULL, " ");
-            if (insert_m(ptr, masterFile, indexFile))
-                continue;
-            else
-                return false;
-        } else if (strcmp(ptr, "insert-s") == 0) {
-            ptr = strtok(NULL, " ");
-            if (insert_s(ptr, masterFile, indexFile, slaveFile))
-                continue;
-            else
-                return false;
-        } else if (strcmp(ptr, "get-m") == 0) {
-            ptr = strtok(NULL, " ");
-            if (get_m(ptr, masterFile, indexFile))
-                continue;
-            else
-                return false;
-        }
+//        else if (strcmp(ptr, "insert-m") == 0) {
+//            ptr = strtok(NULL, " ");
+//            if (insert_m(ptr, masterFile, indexFile))
+//                continue;
+//            else
+//                return false;
+//        } else if (strcmp(ptr, "insert-s") == 0) {
+//            ptr = strtok(NULL, " ");
+//            if (insert_s(ptr, masterFile, indexFile, slaveFile))
+//                continue;
+//            else
+//                return false;
+//        } else if (strcmp(ptr, "get-m") == 0) {
+//            ptr = strtok(NULL, " ");
+//            if (get_m(ptr, masterFile, indexFile))
+//                continue;
+//            else
+//                return false;
+//        }
 //        else if (strcmp(ptr, "get-s") == 0) {
 //            ptr = strtok(NULL, " ");
 //            if (get_s(ptr))
@@ -80,13 +83,13 @@ bool listen(FILE **masterFile, FILE **indexFile, FILE **slaveFile) {
 //            else
 //                return false;
 //        }
-        else if (strcmp(ptr, "del-m") == 0) {
-            ptr = strtok(NULL, " ");
-            if (del_m(ptr, masterFile, indexFile))
-                continue;
-            else
-                return false;
-        }
+//        else if (strcmp(ptr, "del-m") == 0) {
+//            ptr = strtok(NULL, " ");
+//            if (del_m(ptr, masterFile, indexFile))
+//                continue;
+//            else
+//                return false;
+//        }
 //        else if (strcmp(ptr, "del-s") == 0) {
 //            ptr = strtok(NULL, " ");
 //            if (del_s(ptr))
@@ -94,13 +97,13 @@ bool listen(FILE **masterFile, FILE **indexFile, FILE **slaveFile) {
 //            else
 //                return false;
 //        }
-        else if (strcmp(ptr, "update-m") == 0) {
-            ptr = strtok(NULL, " ");
-            if (update_m(ptr, indexFile, masterFile))
-                continue;
-            else
-                return false;
-        }
+//        else if (strcmp(ptr, "update-m") == 0) {
+//            ptr = strtok(NULL, " ");
+//            if (update_m(ptr, indexFile, masterFile))
+//                continue;
+//            else
+//                return false;
+//        }
 //        else if (strcmp(ptr, "update-s") == 0) {
 //            ptr = strtok(NULL, " ");
 //            if (update_s(ptr))
@@ -122,11 +125,12 @@ bool listen(FILE **masterFile, FILE **indexFile, FILE **slaveFile) {
 //            else
 //                return false;
 //        }
-        else if (strcmp(ptr, "count-all") == 0) {
-            ptr = strtok(NULL, " ");
-            printf("Number of cells in slave file: %i", count_all(ptr, slaveFile));
-            continue;
-        } else {
+//        else if (strcmp(ptr, "count-all") == 0) {
+//            ptr = strtok(NULL, " ");
+//            printf("Number of cells in slave file: %i", count_all(ptr, slaveFile));
+//            continue;
+//        }
+        else {
             setbuf(stdout, 0);
             printf("Wrong command!");
             continue;
@@ -178,14 +182,4 @@ void rewrite(const char masterFName[25], const char indexTableFName[25], const c
     fclose(newIndex);
     rename("master.fl", masterFName);
     rename("master.ind", indexTableFName);
-}
-
-int comp(const void *elem1, const void *elem2) {
-    struct Cell f = *((struct Cell *) elem1);
-    if (elem2 == NULL)
-        return 1;
-    struct Cell s = *((struct Cell *) elem2);
-    if (f.id > s.id) return 1;
-    if (f.id < s.id) return -1;
-    return 0;
 }

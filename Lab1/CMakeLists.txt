@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 add_executable(untitled main.c
         structures.h structures.c
+        indexTable.h indexTable.c
         run.h run.c
         io.h io.c
         insert.h insert.c
