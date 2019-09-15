@@ -6,8 +6,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-bool get_m(char *ptr, FILE **masterFile);
+int get_m(char *ptr, FILE **masterFile);
 
-bool get_s(char *ptr);
-
-bool get_i(char *ptr);
+int get_s(char *ptr, FILE **masterFile, FILE **slaveFile);

@@ -108,15 +108,33 @@ void writeDate(const struct Date *date, FILE **slaveFile) {
 
 void printContributor(const struct Contributor *contributor) {
     setbuf(stdout, 0);
-    printf("\nEnter Contributor ID: %ld", contributor->userID);
+    printf("\nContributor ID: %ld", contributor->userID);
     setbuf(stdout, 0);
-    printf("\nEnter Contributor name: %s", contributor->name);
+    printf("\nContributor name: %s", contributor->name);
     setbuf(stdout, 0);
-    printf("\nEnter Contributor e-mail: %s", contributor->eMail);
+    printf("\nContributor e-mail: %s", contributor->eMail);
     setbuf(stdout, 0);
-    printf("\nEnter Contributor password: %s", contributor->password);
+    printf("\nContributor password: %s", contributor->password);
     setbuf(stdout, 0);
-    printf("\nEnter Contributor address: %s", contributor->address);
+    printf("\nContributor address: %s", contributor->address);
+}
+
+void printImage(const struct Image *image) {
+    setbuf(stdout, 0);
+    printf("\nImage type: %s", image->imageType);
+    setbuf(stdout, 0);
+    printf("\nImage width: %f", image->width);
+    setbuf(stdout, 0);
+    printf("\nImage height: %f", image->height);
+    setbuf(stdout, 0);
+    printf("\nEarnings for Image: %f", image->earnings);
+    setbuf(stdout, 0);
+    printf("\nImage status: %s", image->status);
+    printDate(image->date);
+}
+
+void printDate(const struct Date *date) {
+    printf("Date: %i:%i  %i/%i/%i", date->hour, date->minute, date->month, date->day, date->year);
 }
 
 int getContributorIndex(const unsigned long id, FILE **masterFile) {

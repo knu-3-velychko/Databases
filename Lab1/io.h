@@ -1,4 +1,5 @@
 #include "structures.h"
+#include "indexTable.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -19,6 +20,10 @@ void writeImage(const struct Image *image, FILE **slaveFile);
 void writeDate(const struct Date *date, FILE **slaveFile);
 
 void printContributor(const struct Contributor *contributor);
+
+void printImage(const struct Image *image);
+
+void printDate(const struct Date *date);
 
 int getContributorIndex(const unsigned long id, FILE **masterFile);
 

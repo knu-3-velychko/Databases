@@ -24,13 +24,13 @@ bool function(const char masterFName[25], const char indexTableFName[25], const 
 
 
 bool openFile(const char fName[25], FILE **ptr) {
-    *ptr = fopen(fName, "r+");
+    *ptr = fopen(fName, "r+b");
     if (*ptr == NULL) {
         setbuf(stdout, 0);
         printf("File %s does not exist!\n", fName);
         setbuf(stdout, 0);
         printf("Creating new %s file...\n", fName);
-        *ptr = fopen(fName, "w+");
+        *ptr = fopen(fName, "w+b");
         if (*ptr == NULL) {
             setbuf(stdout, 0);
             printf("Creation failed.\n");
@@ -62,28 +62,15 @@ bool listen(FILE **masterFile, FILE **indexFile, FILE **slaveFile) {
                 continue;
             else
                 return false;
-        }
-        else if (strcmp(ptr, "get-m") == 0) {
+        } else if (strcmp(ptr, "get-m") == 0) {
             ptr = strtok(NULL, " ");
-            if (get_m(ptr, masterFile))
-                continue;
-            else
-                return false;
+            get_m(ptr, masterFile);
+            continue;
+        } else if (strcmp(ptr, "get-s") == 0) {
+            ptr = strtok(NULL, " ");
+            get_s(ptr, masterFile, slaveFile);
+            continue;
         }
-//        else if (strcmp(ptr, "get-s") == 0) {
-//            ptr = strtok(NULL, " ");
-//            if (get_s(ptr))
-//                continue;
-//            else
-//                return false;
-//        }
-//        else if (strcmp(ptr, "get-i") == 0) {
-//            ptr = strtok(NULL, " ");
-//            if (get_i(ptr))
-//                continue;
-//            else
-//                return false;
-//        }
 //        else if (strcmp(ptr, "del-m") == 0) {
 //            ptr = strtok(NULL, " ");
 //            if (del_m(ptr, masterFile, indexFile))
