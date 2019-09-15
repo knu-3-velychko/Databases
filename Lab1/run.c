@@ -85,13 +85,13 @@ bool listen(FILE **masterFile, FILE **indexFile, FILE **slaveFile) {
 //            else
 //                return false;
 //        }
-//        else if (strcmp(ptr, "update-m") == 0) {
-//            ptr = strtok(NULL, " ");
-//            if (update_m(ptr, indexFile, masterFile))
-//                continue;
-//            else
-//                return false;
-//        }
+        else if (strcmp(ptr, "update-m") == 0) {
+            ptr = strtok(NULL, " ");
+            if (update_m(ptr, masterFile))
+                continue;
+            else
+                return false;
+        }
 //        else if (strcmp(ptr, "update-s") == 0) {
 //            ptr = strtok(NULL, " ");
 //            if (update_s(ptr))
