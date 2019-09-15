@@ -70,12 +70,16 @@ bool insert_s(char *ptr, FILE **masterFile, FILE **indexTable, FILE **slaveFile)
             int lastImage = getLastImage(imageIndex, slaveFile);
             fseek(*slaveFile, 0, SEEK_SET);
             fseek(*slaveFile, lastImage * IMAGE_SIZE, SEEK_SET);
+
+            if (IMAGE_NUMBER != -1){
+
+            }
         }
         return true;
     }
 }
 
-int getContributorID(unsigned long id, FILE **f) {
+int getContributorID(const unsigned long id, FILE **f) {
     unsigned long tmpID = 0;
     unsigned int index = 0, status = 0;
     fseek(*f, 0, SEEK_SET);
@@ -88,7 +92,7 @@ int getContributorID(unsigned long id, FILE **f) {
     return -1;
 }
 
-int getImageIndex(int index, FILE **masterFile) {
+int getImageIndex(const int index, FILE **masterFile) {
     int imageIndex = -1;
     fseek(*masterFile, 0, SEEK_SET);
     fseek(*masterFile, CONTRIBUTOR_SIZE * (index + 1), SEEK_SET);
@@ -97,6 +101,14 @@ int getImageIndex(int index, FILE **masterFile) {
     return imageIndex;
 }
 
-int getLastImage(int index, FILE **slaveFile) {
-    return -1;
+int getLastImage(const int index, FILE **slaveFile) {
+    int currentImage = index, nextImage = index;
+    while (nextImage != -1) {
+        currentImage = nextImage;
+        fseek(*slaveFile, 0, SEEK_SET);
+        fseek(*slaveFile, (index + 1) * IMAGE_SIZE, SEEK_SET);
+        fseek(*slaveFile, -sizeof(int), SEEK_SET);
+        fread(&nextImage, sizeof(int), 1, *slaveFile);
+    }
+    return currentImage;
 }
