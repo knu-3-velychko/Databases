@@ -1,47 +1,21 @@
 #include "delete.h"
 
-bool del_m(char *ptr, FILE **masterFile, FILE **indexFile) {
-    long id;
-
-    if (ptr != NULL) {
-        char *pEnd;
-        id = strtol(ptr, &pEnd, 10);
-        ptr = strtok(NULL, " ");
-        setbuf(stdout, 0);printf("%ld", id);
-        if (ptr != NULL)
-            return false;
-    } else {
+bool del_m(char *ptr, FILE **masterFile) {
+    int index = get_m(ptr, masterFile);
+    if (index == -1)
         return false;
-    }
-    unsigned long tmpID = 0;
-    unsigned int index = 0, status = 0, i = 0;
-    fseek(*indexFile, 0, SEEK_SET);
-    while (fread(&tmpID, sizeof(unsigned long), 1, *indexFile) == 1) {
-        fread(&index, sizeof(unsigned int), 1, *indexFile);
-        fread(&status, sizeof(unsigned int), 1, *indexFile);
-        printf("%ld %i %i\n",tmpID, index, status);
-        if (tmpID == id && status == 1) {
-            struct Contributor contributor;
-            unsigned int s = 0;
-//            unsigned long userID = 0, size = 0;
-//            char name[25], eMail[25], password[10], address[25];
-            fseek(*masterFile, index * (sizeof(unsigned long) + sizeof(char) * (25 * 3 + 10) + sizeof(unsigned int)),
-                  SEEK_SET);
-            fseek(*masterFile, sizeof(unsigned long) + sizeof(char) * (25 * 3 + 10), SEEK_CUR);
-
-            fseek(*indexFile, (i * (sizeof(unsigned long) + 2 * sizeof(unsigned int)) + sizeof(unsigned long) +
-                                   sizeof(unsigned int)), SEEK_SET);
-            fwrite(&s, sizeof(unsigned int), 1, *masterFile);
-            fwrite(&s, sizeof(unsigned int), 1, *indexFile);
-
-            return true;
-        }
-        i++;
-    }
-    setbuf(stdout, 0);printf("ID %ld does not exist.", id);
+    unsigned int status = 0;
+    fseek(*masterFile, sizeof(struct Contributor) * (index + 1), SEEK_SET);
+    fwrite(&status, sizeof(unsigned int), 1, *masterFile);
     return true;
 }
 
-bool del_s(char *ptr) {
+bool del_s(char *ptr, FILE **masterFile, FILE **slaveFile) {
+    int index = get_s(ptr, masterFile, slaveFile);
+    if (index == -1)
+        return false;
+    unsigned int status = 0;
+    fseek(*slaveFile, sizeof(struct Image) * (index + 1), SEEK_SET);
+    fwrite(&status, sizeof(unsigned int), 1, *slaveFile);
     return true;
 }

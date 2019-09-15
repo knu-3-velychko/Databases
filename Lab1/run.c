@@ -55,13 +55,13 @@ bool listen(FILE **masterFile, FILE **indexFile, FILE **slaveFile) {
             if (insert_m(ptr, masterFile))
                 continue;
             else
-                return false;
+                printf("Error!");
         } else if (strcmp(ptr, "insert-s") == 0) {
             ptr = strtok(NULL, " ");
             if (insert_s(ptr, masterFile, slaveFile))
                 continue;
             else
-                return false;
+                printf("Error!");
         } else if (strcmp(ptr, "get-m") == 0) {
             ptr = strtok(NULL, " ");
             get_m(ptr, masterFile);
@@ -70,36 +70,31 @@ bool listen(FILE **masterFile, FILE **indexFile, FILE **slaveFile) {
             ptr = strtok(NULL, " ");
             get_s(ptr, masterFile, slaveFile);
             continue;
-        }
-//        else if (strcmp(ptr, "del-m") == 0) {
-//            ptr = strtok(NULL, " ");
-//            if (del_m(ptr, masterFile, indexFile))
-//                continue;
-//            else
-//                return false;
-//        }
-//        else if (strcmp(ptr, "del-s") == 0) {
-//            ptr = strtok(NULL, " ");
-//            if (del_s(ptr))
-//                continue;
-//            else
-//                return false;
-//        }
-        else if (strcmp(ptr, "update-m") == 0) {
+        } else if (strcmp(ptr, "del-m") == 0) {
+            ptr = strtok(NULL, " ");
+            if (del_m(ptr, masterFile))
+                continue;
+            else
+                printf("Wrong command!");
+        } else if (strcmp(ptr, "del-s") == 0) {
+            ptr = strtok(NULL, " ");
+            if (del_s(ptr, masterFile, slaveFile))
+                continue;
+            else
+                printf("Wrong command!");
+        } else if (strcmp(ptr, "update-m") == 0) {
             ptr = strtok(NULL, " ");
             if (update_m(ptr, masterFile))
                 continue;
             else
-                return false;
-        }
-        else if (strcmp(ptr, "update-s") == 0) {
+                printf("Wrong command!");
+        } else if (strcmp(ptr, "update-s") == 0) {
             ptr = strtok(NULL, " ");
-            if (update_s(ptr,masterFile,slaveFile))
+            if (update_s(ptr, masterFile, slaveFile))
                 continue;
             else
-                return false;
-        }
-        else if (strcmp(ptr, "count-m") == 0) {
+                printf("Error!");
+        } else if (strcmp(ptr, "count-m") == 0) {
             ptr = strtok(NULL, " ");
             setbuf(stdout, 0);
             printf("Number of cells in master file: %i", count_m(ptr, masterFile));

@@ -28,6 +28,7 @@ bool insert_m(char *ptr, FILE **masterFile) {
         long index = ftell(*masterFile) / (sizeof(struct Contributor) + sizeof(int));
         writeContributor(contributor, masterFile);
         add(id, index);
+        free(contributor);
         return true;
     }
 
@@ -79,6 +80,7 @@ bool insert_s(char *ptr, FILE **masterFile, FILE **slaveFile) {
             image->nextIndex = getImageIndex(index, masterFile);
             setImageIndex(index, end, masterFile);
             writeImage(image, slaveFile);
+            free(image);
             return true;
         }
     }

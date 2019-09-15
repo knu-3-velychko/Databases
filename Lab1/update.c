@@ -11,6 +11,7 @@ bool update_m(char *ptr, FILE **masterFile) {
     contributor->userID = id;
     fseek(*masterFile, sizeof(struct Contributor) * index, SEEK_SET);
     fwrite(contributor, sizeof(struct Contributor), 1, *masterFile);
+    free(contributor);
     return true;
 }
 
@@ -31,5 +32,6 @@ bool update_s(char *ptr, FILE **masterFile, FILE **slaveFile) {
     image->nextIndex = nextImage;
     fseek(*slaveFile, sizeof(struct Image) * index, SEEK_SET);
     fwrite(image, sizeof(struct Image), 1, *slaveFile);
+    free(image);
     return true;
 }

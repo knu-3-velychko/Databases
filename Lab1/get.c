@@ -25,6 +25,7 @@ int get_m(char *ptr, FILE **masterFile) {
         fseek(*masterFile, sizeof(struct Contributor) * index, SEEK_SET);
         fread(contributor, sizeof(struct Contributor), 1, *masterFile);
         printContributor(contributor);
+        free(contributor);
         return index;
     }
 }
@@ -66,10 +67,12 @@ int get_s(char *ptr, FILE **masterFile, FILE **slaveFile) {
             fread(&status, sizeof(unsigned int), 1, *slaveFile);
             if (image->imageID == imageID && status == 1) {
                 printImage(image);
+                free(image);
                 return imageIndex;
             }
             imageIndex = image->nextIndex;
         }
+        free(image);
         return -1;
     }
 }
