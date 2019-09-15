@@ -92,13 +92,13 @@ bool listen(FILE **masterFile, FILE **indexFile, FILE **slaveFile) {
             else
                 return false;
         }
-//        else if (strcmp(ptr, "update-s") == 0) {
-//            ptr = strtok(NULL, " ");
-//            if (update_s(ptr))
-//                continue;
-//            else
-//                return false;
-//        }
+        else if (strcmp(ptr, "update-s") == 0) {
+            ptr = strtok(NULL, " ");
+            if (update_s(ptr,masterFile,slaveFile))
+                continue;
+            else
+                return false;
+        }
         else if (strcmp(ptr, "count-m") == 0) {
             ptr = strtok(NULL, " ");
             setbuf(stdout, 0);

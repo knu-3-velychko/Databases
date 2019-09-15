@@ -13,3 +13,23 @@ bool update_m(char *ptr, FILE **masterFile) {
     fwrite(contributor, sizeof(struct Contributor), 1, *masterFile);
     return true;
 }
+
+bool update_s(char *ptr, FILE **masterFile, FILE **slaveFile) {
+    int index = get_s(ptr, masterFile, slaveFile);
+    if (index == -1)
+        return false;
+    unsigned long contributorID = 0, imageID = 0;
+    int nextImage = -1;
+    fseek(*slaveFile, sizeof(struct Image) * index, SEEK_SET);
+    fread(&imageID, sizeof(unsigned long), 1, *slaveFile);
+    fread(&contributorID, sizeof(unsigned long), 1, *slaveFile);
+    fseek(*slaveFile, sizeof(struct Image) * (index + 1) - sizeof(int), SEEK_SET);
+    fread(&nextImage, sizeof(int), 1, *slaveFile);
+    struct Image *image = readImage();
+    image->imageID = imageID;
+    image->contributorID = contributorID;
+    image->nextIndex = nextImage;
+    fseek(*slaveFile, sizeof(struct Image) * index, SEEK_SET);
+    fwrite(image, sizeof(struct Image), 1, *slaveFile);
+    return true;
+}
