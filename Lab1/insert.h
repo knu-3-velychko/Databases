@@ -1,4 +1,5 @@
 #include "io.h"
+#include "count.h"
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
@@ -11,6 +12,8 @@ bool insert_m(char *ptr, FILE **masterFile, FILE **indexFile);
 bool insert_s(char *ptr, FILE **masterFile, FILE **indexTable, FILE **slaveFile);
 
 int getContributorID(const unsigned long id, FILE **indexTable);
+
+int getImageID(const unsigned long id, FILE **slaveFile);
 
 int getImageIndex(const int index, FILE **masterFile);
 

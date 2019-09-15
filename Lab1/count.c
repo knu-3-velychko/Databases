@@ -2,7 +2,8 @@
 
 unsigned int count_m(char *ptr, FILE **indexFile) {
     if (ptr != NULL) {
-        setbuf(stdout, 0);printf("Wrong command.");
+        setbuf(stdout, 0);
+        printf("Wrong command.");
         return false;
     }
     unsigned long tmpID = 0;
@@ -21,6 +22,20 @@ unsigned int count_s(char *ptr) {
     return true;
 }
 
-unsigned int count_all(char *ptr) {
-    return true;
+unsigned int count_all(char *ptr, FILE **slaveFile) {
+    if (ptr != NULL) {
+        setbuf(stdout, 0);
+        printf("Wrong command.");
+        return false;
+    }
+    unsigned long tmpID = 0;
+    unsigned int index = 0, status = 0, i = 0;
+    fseek(*slaveFile, 0, SEEK_SET);
+    while (!feof(*slaveFile)) {
+        fseek(*slaveFile, IMAGE_SIZE - sizeof(int), SEEK_SET);
+        fread(&status, sizeof(int), 1, *slaveFile);
+        if (status == 1)
+            i++;
+    }
+    return i;
 }
