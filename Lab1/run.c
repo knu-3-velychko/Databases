@@ -116,21 +116,15 @@ bool listen(FILE **masterFile, FILE **indexFile, FILE **slaveFile) {
             setbuf(stdout, 0);
             printf("Number of cells in master file: %i", count_m(ptr, indexFile));
             continue;
-
-        }
-//        else if (strcmp(ptr, "count-s") == 0) {
-//            ptr = strtok(NULL, " ");
-//            if (count_s(ptr))
-//                continue;
-//            else
-//                return false;
-//        }
-//        else if (strcmp(ptr, "count-all") == 0) {
-//            ptr = strtok(NULL, " ");
-//            printf("Number of cells in slave file: %i", count_all(ptr, slaveFile));
-//            continue;
-//        }
-        else {
+        } else if (strcmp(ptr, "count-s") == 0) {
+            ptr = strtok(NULL, " ");
+            printf("Number of cells for user in slave file: %i", count_s(ptr, slaveFile));
+            continue;
+        } else if (strcmp(ptr, "count-all") == 0) {
+            ptr = strtok(NULL, " ");
+            printf("Number of cells in slave file: %i", count_all(ptr, slaveFile));
+            continue;
+        } else {
             setbuf(stdout, 0);
             printf("Wrong command!");
             continue;

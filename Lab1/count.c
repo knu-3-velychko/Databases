@@ -18,18 +18,26 @@ unsigned int count_m(char *ptr, FILE **masterFile) {
 }
 
 unsigned int count_s(char *ptr, FILE **slaveFile) {
+    unsigned long contributorID = 0;
+
     if (ptr != NULL) {
-        setbuf(stdout, 0);
-        printf("Wrong command.");
+        char *pEnd;
+        contributorID = strtol(ptr, &pEnd, 10);
+        ptr = strtok(NULL, " ");
+        if (ptr != NULL)
+            return false;
+    } else {
         return false;
     }
+
     unsigned long id = 0;
     unsigned int status = 0, i = 0;
     fseek(*slaveFile, 0, SEEK_SET);
     while ((fread(&id, sizeof(long int), 1, *slaveFile)) == 1) {
+        fread(&id, sizeof(long int), 1, *slaveFile);
         fseek(*slaveFile, IMAGE_SIZE - sizeof(long int), SEEK_CUR);
         fread(&status, sizeof(int), 1, *slaveFile);
-        if (status == 1)
+        if (status == 1 && id == contributorID)
             i++;
     }
     return i;
