@@ -142,7 +142,7 @@ int getContributorIndex(const unsigned long id, FILE **masterFile) {
     int index = searchTable(id);
     printf("%i", index);
     if (index != -1) {
-        fseek(*masterFile, (index + 1) * sizeof(struct Contributor), SEEK_SET);
+        fseek(*masterFile, (index + 1) * (sizeof(struct Contributor) + sizeof(int)) - sizeof(int), SEEK_SET);
         fread(&status, sizeof(unsigned int), 1, *masterFile);
         printf("\n%i   ", status);
         if (status == 1)
@@ -164,13 +164,13 @@ int getImageID(const unsigned long id, FILE **slaveFile) {
 }
 
 void setImageIndex(const unsigned long contributorIndex, const unsigned long imageIndex, FILE **masterFile) {
-    fseek(*masterFile, sizeof(struct Contributor) * (contributorIndex + 1) - sizeof(int), SEEK_SET);
+    fseek(*masterFile, (sizeof(struct Contributor) + sizeof(int)) * (contributorIndex + 1) - 2*sizeof(int), SEEK_SET);
     fwrite(&imageIndex, sizeof(int), 1, *masterFile);
 }
 
 int getImageIndex(const int index, FILE **masterFile) {
     struct Contributor *contributor = malloc(sizeof(struct Contributor));
-    fseek(*masterFile, sizeof(struct Contributor) * index, SEEK_SET);
+    fseek(*masterFile, (sizeof(struct Contributor) + sizeof(int)) * index, SEEK_SET);
     fread(contributor, sizeof(struct Contributor), 1, *masterFile);
     free(contributor);
     return contributor->firstImage;

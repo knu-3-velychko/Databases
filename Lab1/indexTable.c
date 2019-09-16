@@ -43,7 +43,7 @@ int searchTable(unsigned long id) {
     if (TABLE_SIZE == 0)
         return -1;
     sortTable();
-    unsigned int first = 0, last = TABLE_SIZE, mid;
+    unsigned int first = 0, last = TABLE_SIZE - 1, mid;
     bool flag = false;
     while (first <= last) {
         mid = (first + last) / 2;
@@ -82,6 +82,23 @@ void add(unsigned long id, unsigned int index) {
     indexTable[TABLE_SIZE]->index = index;
     TABLE_SIZE++;
     sorted = false;
+}
+
+void del(unsigned long id) {
+    if (TABLE_SIZE == 0)
+        return;
+    int index = -1;
+    for (int i = 0; i < TABLE_SIZE; i++) {
+        if (indexTable[i]->id == id) {
+            index = i;
+        }
+    }
+    if (index != -1) {
+        for (int i = index; i < TABLE_SIZE - 1; i++) {
+            indexTable[i] = indexTable[i + 1];
+        }
+        TABLE_SIZE--;
+    }
 }
 
 int comp(const void *elem1, const void *elem2) {

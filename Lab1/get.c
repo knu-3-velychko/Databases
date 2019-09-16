@@ -22,7 +22,7 @@ int get_m(char *ptr, FILE **masterFile) {
         return -1;
     } else {
         struct Contributor *contributor = malloc(sizeof(struct Contributor));
-        fseek(*masterFile, sizeof(struct Contributor) * index, SEEK_SET);
+        fseek(*masterFile, (sizeof(struct Contributor) + sizeof(int)) * index, SEEK_SET);
         fread(contributor, sizeof(struct Contributor), 1, *masterFile);
         printContributor(contributor);
         free(contributor);
@@ -61,7 +61,7 @@ int get_s(char *ptr, FILE **masterFile, FILE **slaveFile) {
         struct Image *image = malloc(sizeof(struct Image));
         unsigned int status = 0;
         while (imageIndex != -1) {
-            fseek(*slaveFile, sizeof(struct Image) * imageIndex, SEEK_SET);
+            fseek(*slaveFile, (sizeof(struct Image)+sizeof(int)) * imageIndex, SEEK_SET);
             fread(image, sizeof(struct Image), 1, *slaveFile);
             fread(&status, sizeof(unsigned int), 1, *slaveFile);
             if (image->imageID == imageID && status == 1) {

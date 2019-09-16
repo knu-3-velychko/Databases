@@ -18,7 +18,7 @@ bool del_m(char *ptr, FILE **masterFile, FILE **slaveFile) {
     ltoa(contributorID, cStr, 10);
 
     while (lastImage != -1) {
-        fseek(*slaveFile, sizeof(struct Image) * (lastImage + 1) - sizeof(int), SEEK_SET);
+        fseek(*slaveFile, (sizeof(struct Image) + sizeof(int)) * (lastImage + 1) - 2 * sizeof(int), SEEK_SET);
         fread(&lastImage, sizeof(int), 1, *slaveFile);
         char tmp[50];
         itoa(lastImage, tmp, 10);
@@ -27,7 +27,8 @@ bool del_m(char *ptr, FILE **masterFile, FILE **slaveFile) {
         del_s(cStr, masterFile, slaveFile);
     }
 
-    fseek(*masterFile, sizeof(struct Contributor) * (index + 1), SEEK_SET);
+    del(contributorID);
+    fseek(*masterFile, (sizeof(struct Contributor) + sizeof(int)) * (index + 1) - sizeof(int), SEEK_SET);
     fwrite(&status, sizeof(unsigned int), 1, *masterFile);
     return true;
 }
@@ -51,29 +52,30 @@ bool del_s(char *ptr, FILE **masterFile, FILE **slaveFile) {
     if (imageIndex == -1)
         return false;
 
+    unsigned int status = 0;
+    fseek(*slaveFile, (sizeof(int) + sizeof(struct Image) * (imageIndex + 1)) - sizeof(int), SEEK_SET);
+    fwrite(&status, sizeof(unsigned int), 1, *slaveFile);
+
     if (lastImage == imageIndex) {
         int nextIndex = -1;
-        fseek(*masterFile, sizeof(struct Contributor) * (contributorIndex + 1) - sizeof(int), SEEK_SET);
-        fseek(*slaveFile, sizeof(struct Image) * (imageIndex + 1) - sizeof(int), SEEK_SET);
+        fseek(*masterFile, (sizeof(struct Contributor) + sizeof(int)) * (contributorIndex + 1) - 2 * sizeof(int),
+              SEEK_SET);
+        fseek(*slaveFile, (sizeof(struct Image) + sizeof(int)) * (imageIndex + 1) - 2 * sizeof(int), SEEK_SET);
         fread(&nextIndex, sizeof(int), 1, *slaveFile);
         fwrite(&nextIndex, sizeof(int), 1, *masterFile);
     } else {
         int prevIndex = lastImage, nextIndex = lastImage;
         while (prevIndex != -1) {
             prevIndex = nextIndex;
-            fseek(*slaveFile, sizeof(struct Image) * (nextIndex + 1) - sizeof(int), SEEK_SET);
+            fseek(*slaveFile, (sizeof(struct Image) + sizeof(int)) * (nextIndex + 1) - 2 * sizeof(int), SEEK_SET);
             fread(&nextIndex, sizeof(int), 1, *slaveFile);
             if (nextIndex == imageIndex) {
-                fseek(*slaveFile, sizeof(struct Image) * (nextIndex + 1) - sizeof(int), SEEK_SET);
+                fseek(*slaveFile, (sizeof(int) + sizeof(struct Image)) * (nextIndex + 1) - 2 * sizeof(int), SEEK_SET);
                 fread(&nextIndex, sizeof(int), 1, *slaveFile);
-                fseek(*slaveFile, sizeof(struct Image) * (prevIndex + 1) - sizeof(int), SEEK_SET);
+                fseek(*slaveFile, (sizeof(int) + sizeof(struct Image)) * (prevIndex + 1) - 2 * sizeof(int), SEEK_SET);
                 fwrite(&nextIndex, sizeof(int), 1, *slaveFile);
             }
         }
-        return true;
     }
-    unsigned int status = 0;
-    fseek(*slaveFile, sizeof(struct Image) * (imageIndex + 1), SEEK_SET);
-    fwrite(&status, sizeof(unsigned int), 1, *slaveFile);
     return true;
 }
