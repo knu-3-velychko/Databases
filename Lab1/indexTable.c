@@ -12,7 +12,8 @@ void initializeTable() {
 void readTable(FILE **indexFile) {
     unsigned long id = 0;
     unsigned int index = 0, i = 0;
-    while (fread(&id, sizeof(unsigned long), 1, *indexFile) == 1) {
+    while (fread(&id, sizeof(unsigned long), 1, *indexFile)) {
+        printf("i");
         fread(&index, sizeof(unsigned int), 1, *indexFile);
         indexTable[i]->id = id;
         indexTable[i]->index = index;
@@ -56,8 +57,15 @@ int searchTable(unsigned long id) {
                 last = mid - 1;
         }
     }
-    if (flag)
+    if (flag) {
+        printf("%i", indexTable[mid]->index);
+        while (indexTable[mid]->id == indexTable[mid + 1]->id &&
+               indexTable[mid]->index < id < indexTable[mid + 1]->index) {
+            mid++;
+            printf("%i", indexTable[mid]->index);
+        }
         return indexTable[mid]->index;
+    }
     return -1;
 }
 
@@ -81,7 +89,13 @@ int comp(const void *elem1, const void *elem2) {
     if (elem2 == NULL)
         return 1;
     struct Cell s = *((struct Cell *) elem2);
-    if (f.id > s.id) return 1;
+    if (f.id > s.id)
+        return 1;
     if (f.id < s.id) return -1;
+    if (f.id == s.id) {
+        if (f.index > s.index)
+            return 1;
+        return -1;
+    }
     return 0;
 }

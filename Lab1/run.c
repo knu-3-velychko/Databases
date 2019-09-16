@@ -72,7 +72,7 @@ bool listen(FILE **masterFile, FILE **indexFile, FILE **slaveFile) {
             continue;
         } else if (strcmp(ptr, "del-m") == 0) {
             ptr = strtok(NULL, " ");
-            if (del_m(ptr, masterFile))
+            if (del_m(ptr, masterFile, slaveFile))
                 continue;
             else
                 printf("Wrong command!");
@@ -119,18 +119,20 @@ bool listen(FILE **masterFile, FILE **indexFile, FILE **slaveFile) {
 void rewrite(const char masterFName[25], const char indexTableFName[25], const char slaveFName[25],
              FILE **masterFile, FILE **indexFile, FILE **slaveFile) {
 
-    FILE *newMaster = fopen("master.fl", "w+");
-    FILE *newIndex = fopen("master.ind", "w+");
+//    FILE *newMaster = fopen("master.fl", "w+");
+//    FILE *newIndex = fopen("master.ind", "w+");
+//    FILE *newSlave = fopen("master.ind", "w+");
 
+    writeTable(indexFile, indexTableFName);
     fclose(*masterFile);
     fclose(*indexFile);
     fclose(*slaveFile);
-
-    remove(masterFName);
-    remove(indexTableFName);
-
-    fclose(newMaster);
-    fclose(newIndex);
-    rename("master.fl", masterFName);
-    rename("master.ind", indexTableFName);
+//
+//    remove(masterFName);
+//    remove(indexTableFName);
+//
+//    fclose(newMaster);
+//    fclose(newIndex);
+//    rename("master.fl", masterFName);
+//    rename("master.ind", indexTableFName);
 }

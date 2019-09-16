@@ -34,13 +34,12 @@ int get_s(char *ptr, FILE **masterFile, FILE **slaveFile) {
     long contributorID = 0, imageID = 0;
 
     if (ptr != NULL) {
-        char *pEnd;
-        contributorID = strtol(ptr, &pEnd, 10);
+        contributorID = strtol(ptr, NULL, 10);
         ptr = strtok(NULL, " ");
         if (ptr == NULL)
             return -1;
         else {
-            imageID = strtol(ptr, &pEnd, 10);
+            imageID = strtol(ptr, NULL, 10);
             ptr = strtok(NULL, " ");
             if (ptr != NULL)
                 return -1;

@@ -23,6 +23,7 @@ bool insert_m(char *ptr, FILE **masterFile) {
     } else {
         struct Contributor *contributor = readContributor();
         contributor->userID = id;
+        contributor->firstImage = -1;
 
         fseek(*masterFile, 0, SEEK_END);
         long index = ftell(*masterFile) / (sizeof(struct Contributor) + sizeof(int));

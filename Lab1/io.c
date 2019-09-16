@@ -144,6 +144,7 @@ int getContributorIndex(const unsigned long id, FILE **masterFile) {
     if (index != -1) {
         fseek(*masterFile, (index + 1) * sizeof(struct Contributor), SEEK_SET);
         fread(&status, sizeof(unsigned int), 1, *masterFile);
+        printf("\n%i   ", status);
         if (status == 1)
             return index;
     }
@@ -171,5 +172,6 @@ int getImageIndex(const int index, FILE **masterFile) {
     struct Contributor *contributor = malloc(sizeof(struct Contributor));
     fseek(*masterFile, sizeof(struct Contributor) * index, SEEK_SET);
     fread(contributor, sizeof(struct Contributor), 1, *masterFile);
+    free(contributor);
     return contributor->firstImage;
 }
