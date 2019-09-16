@@ -12,8 +12,7 @@ void initializeTable() {
 void readTable(FILE **indexFile) {
     unsigned long id = 0;
     unsigned int index = 0, i = 0;
-    while (fread(&id, sizeof(unsigned long), 1, *indexFile)) {
-        printf("i");
+    while (fread(&id, sizeof(unsigned long), 1, *indexFile)) {;
         fread(&index, sizeof(unsigned int), 1, *indexFile);
         indexTable[i]->id = id;
         indexTable[i]->index = index;
@@ -58,11 +57,9 @@ int searchTable(unsigned long id) {
         }
     }
     if (flag) {
-        printf("%i", indexTable[mid]->index);
         while (indexTable[mid]->id == indexTable[mid + 1]->id &&
                indexTable[mid]->index < id < indexTable[mid + 1]->index) {
             mid++;
-            printf("%i", indexTable[mid]->index);
         }
         return indexTable[mid]->index;
     }

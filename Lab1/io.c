@@ -142,7 +142,6 @@ int getContributorIndex(const unsigned long id, FILE **masterFile) {
     if (index != -1) {
         fseek(*masterFile, (index + 1) * (sizeof(struct Contributor) + sizeof(int)) - sizeof(int), SEEK_SET);
         fread(&status, sizeof(unsigned int), 1, *masterFile);
-        printf("\n%i   ", status);
         if (status == 1)
             return index;
     }
