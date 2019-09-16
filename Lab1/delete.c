@@ -18,13 +18,14 @@ bool del_m(char *ptr, FILE **masterFile, FILE **slaveFile) {
     ltoa(contributorID, cStr, 10);
 
     while (lastImage != -1) {
-        fseek(*slaveFile, (sizeof(struct Image) + sizeof(int)) * (lastImage + 1) - 2 * sizeof(int), SEEK_SET);
-        fread(&lastImage, sizeof(int), 1, *slaveFile);
         char tmp[50];
         itoa(lastImage, tmp, 10);
         strcat(cStr, " ");
         strcat(cStr, tmp);
-        del_s(cStr, masterFile, slaveFile);
+        char* newPtr = strtok(cStr, " ");
+        del_s(newPtr, masterFile, slaveFile);
+        fseek(*slaveFile, (sizeof(struct Image) + sizeof(int)) * (lastImage + 1) - 2 * sizeof(int), SEEK_SET);
+        fread(&lastImage, sizeof(int), 1, *slaveFile);
     }
 
     del(contributorID);
@@ -32,7 +33,6 @@ bool del_m(char *ptr, FILE **masterFile, FILE **slaveFile) {
     fwrite(&status, sizeof(unsigned int), 1, *masterFile);
     return true;
 }
-
 
 bool del_s(char *ptr, FILE **masterFile, FILE **slaveFile) {
     char *tmp = ptr;

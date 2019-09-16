@@ -31,4 +31,4 @@ int getImageID(const unsigned long id, FILE **slaveFile);
 
 int getImageIndex(const int index, FILE **masterFile);
 
-void setImageIndex(const unsigned long contributorIndex, const unsigned long imageIndex, FILE **masterFile);
+void setImageIndex(const unsigned long contributorIndex, int imageIndex, FILE **masterFile);

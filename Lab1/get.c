@@ -7,8 +7,6 @@ int get_m(char *ptr, FILE **masterFile) {
         char *pEnd;
         id = strtol(ptr, &pEnd, 10);
         ptr = strtok(NULL, " ");
-        setbuf(stdout, 0);
-        printf("%ld", id);
         if (ptr != NULL)
             return -1;
     } else {
@@ -55,7 +53,6 @@ int get_s(char *ptr, FILE **masterFile, FILE **slaveFile) {
         return -1;
     } else {
         int imageIndex = getImageIndex(index, masterFile);
-        printf("%i", imageIndex);
         if (imageIndex == -1)
             return -1;
         struct Image *image = malloc(sizeof(struct Image));

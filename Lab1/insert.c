@@ -44,8 +44,6 @@ bool insert_s(char *ptr, FILE **masterFile, FILE **slaveFile) {
         char *pEnd;
         contributorID = strtol(ptr, &pEnd, 10);
         ptr = strtok(NULL, " ");
-        setbuf(stdout, 0);
-        printf("%ld", contributorID);
         if (ptr != NULL)
             return false;
     } else {
